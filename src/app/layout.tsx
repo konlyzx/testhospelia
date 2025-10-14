@@ -77,10 +77,10 @@ export default function RootLayout({
         />
         <link rel="dns-prefetch" href="https://wp.hospelia.co" />
 
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1, shrink-to-fit=no"
-        />
+        <meta charSet="utf-8" />
+
+        {/* Ahrefs Web Analytics */}
+        <script src="https://analytics.ahrefs.com/analytics.js" data-key="+KTC6G4Kj1NHAuKA/N3UtA" async></script>
       </head>
       <body className="antialiased">
         {/* Google Tag Manager */}
@@ -104,6 +104,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             height="0"
             width="0"
             style={{ display: "none", visibility: "hidden" }}
+            title="Google Tag Manager"
           ></iframe>
         </noscript>
         {/* End Google Tag Manager (noscript) */}
@@ -207,7 +208,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             width="1" 
             style={{ display: "none" }}
             src="https://www.facebook.com/tr?id=2059684518101612&ev=PageView&noscript=1"
-            alt=""
+            alt="Facebook Pixel tracking pixel"
           />
         </noscript>
         {/* End Meta Pixel Code */}

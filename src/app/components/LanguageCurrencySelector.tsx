@@ -14,6 +14,7 @@ interface LanguageCurrencySelectorProps {
 
 const languages = {
   es: { name: 'Español', flag: '🇪🇸' },
+  en: { name: 'English', flag: '🇺🇸' },
 };
 
 const currencies = {
@@ -104,12 +105,12 @@ export default function LanguageCurrencySelector({
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center space-x-2 px-4 py-2 bg-white border border-gray-300 rounded-lg hover:border-gray-400 hover:shadow-lg transition-all duration-200 shadow-sm"
+        aria-label={`Seleccionar idioma y moneda. Idioma actual: ${languages[language]?.name ?? 'Idioma'}, Moneda actual: ${currency}`}
       >
         <span className="text-lg">{languages[language]?.flag ?? '🌐'}</span>
         <span className="text-sm font-semibold text-gray-800 hidden sm:inline bg-white">
           {languages[language]?.name ?? 'Idioma'}
         </span>
-        <span className="text-gray-500 bg-white">|</span>
         <span className="text-lg bg-white">{currencies[currency]?.flag ?? '💲'}</span>
         <span className="text-sm font-semibold text-gray-800 hidden sm:inline bg-white">
           {currency}

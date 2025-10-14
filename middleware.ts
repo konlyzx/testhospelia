@@ -59,8 +59,8 @@ export function middleware(request: NextRequest) {
     }
   }
   
-  // Headers de seguridad
-  response.headers.set('X-Frame-Options', 'DENY');
+  // Headers de seguridad optimizados
+  response.headers.set('X-Frame-Options', 'SAMEORIGIN');
   response.headers.set('X-Content-Type-Options', 'nosniff');
   response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
   
