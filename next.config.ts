@@ -21,6 +21,14 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: '**.wasi.co',  // Para imágenes de WASI
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'lh3.googleusercontent.com',
       }
     ],
     formats: ['image/webp', 'image/avif'],
@@ -50,15 +58,7 @@ const nextConfig: NextConfig = {
           }
         ]
       },
-      {
-        source: '/(.*)',
-        headers: [
-          {
-            key: 'Content-Security-Policy',
-            value: "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://connect.facebook.net https://cdn.jsdelivr.net; img-src 'self' data: https:; connect-src 'self' https:;"
-          }
-        ]
-      }
+      
     ]
   },
 

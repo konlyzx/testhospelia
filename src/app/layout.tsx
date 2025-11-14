@@ -8,6 +8,7 @@ import { CurrencyProvider } from '@/contexts/CurrencyContext';
 import { RecommendationProvider } from '@/contexts/RecommendationContext';
 import AppInitializer from "@/components/AppInitializer";
 import DeferredWidgets from "./components/DeferredWidgets";
+import BreadcrumbJsonLd from "./components/BreadcrumbJsonLd";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,6 +34,14 @@ export const metadata: Metadata = {
     type: "website",
     locale: "es_CO",
     url: "https://hospelia.co/",
+    images: [
+      {
+        url: "https://hospelia.co/img/logo-hospelia.webp",
+        width: 1200,
+        height: 630,
+        alt: "Hospelia"
+      }
+    ],
   },
   robots: {
     index: true,
@@ -49,6 +58,14 @@ export const metadata: Metadata = {
     width: "device-width",
     initialScale: 1,
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "Hospelia.co | Alojamientos en Cali",
+    description:
+      "Encuentra alojamientos y apartamentos amoblados en Cali: ubicaciones céntricas, comodidades completas y reservas seguras.",
+    images: ["https://hospelia.co/img/logo-hospelia.webp"],
+    site: "@hospelia"
+  }
 };
 
 export default function RootLayout({
@@ -59,26 +76,7 @@ export default function RootLayout({
   return (
     <html lang="es" className={`${geistSans.variable} ${geistMono.variable}`}>
       <head>
-        {/* Global Error Catcher */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.addEventListener('error', function (e) {
-                document.body.innerHTML = '<pre style="background:#000;color:#f00;padding:1rem;">' +
-                  'Error: ' + e.message + '\\n' +
-                  'Source: ' + e.filename + ':' + e.lineno + ':' + e.colno + '\\n' +
-                  (e.error && e.error.stack ? e.error.stack : '') +
-                '</pre>';
-              });
-              window.addEventListener('unhandledrejection', function (e) {
-                document.body.innerHTML = '<pre style="background:#000;color:#f00;padding:1rem;">' +
-                  'UnhandledRejection: ' + (e.reason && e.reason.message ? e.reason.message : e.reason) + '\\n' +
-                  (e.reason && e.reason.stack ? e.reason.stack : '') +
-                '</pre>';
-              });
-            `,
-          }}
-        />
+        
 
         <link rel="preconnect" href="https://www.googletagmanager.com" />
         <link rel="preconnect" href="https://www.google-analytics.com" />
@@ -91,6 +89,8 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://wp.hospelia.co" />
 
         <meta charSet="utf-8" />
+        <link rel="icon" href="/globe.svg" type="image/svg+xml" />
+        <link rel="apple-touch-icon" href="/img/logo-hospelia.webp" />
         {/* Ahrefs site verification */}
         <meta
           name="ahrefs-site-verification"
@@ -106,6 +106,7 @@ export default function RootLayout({
             __html: JSON.stringify({
               '@context': 'https://schema.org',
               '@type': 'Organization',
+              '@id': 'https://hospelia.co/#organization',
               name: 'Hospelia',
               url: 'https://hospelia.co/',
               logo: 'https://hospelia.co/img/logo-hospelia.webp',
@@ -115,7 +116,20 @@ export default function RootLayout({
                 'https://www.linkedin.com/company/hospelia',
                 'https://x.com/hospelia',
                 'https://www.youtube.com/@hospelia'
-              ]
+              ],
+              contactPoint: [{
+                '@type': 'ContactPoint',
+                contactType: 'customer service',
+                telephone: '+57 301 754 6634',
+                areaServed: 'CO',
+                availableLanguage: ['es']
+              }],
+              address: {
+                '@type': 'PostalAddress',
+                addressLocality: 'Cali',
+                addressRegion: 'Valle del Cauca',
+                addressCountry: 'CO'
+              }
             }),
           }}
         />
@@ -130,6 +144,8 @@ export default function RootLayout({
               '@type': 'WebSite',
               name: 'Hospelia',
               url: 'https://hospelia.co/',
+              inLanguage: 'es-CO',
+              publisher: { '@id': 'https://hospelia.co/#organization' },
               potentialAction: {
                 '@type': 'SearchAction',
                 target: 'https://hospelia.co/alojamientos?query={search_term_string}',
@@ -139,12 +155,11 @@ export default function RootLayout({
           }}
         />
 
-        {/* Ahrefs Web Analytics */}
-        <script
+        <Script
           src="https://analytics.ahrefs.com/analytics.js"
+          strategy="lazyOnload"
           data-key="+KTC6G4Kj1NHAuKA/N3UtA"
-          async
-        ></script>
+        />
       </head>
       <body className="antialiased">
         {/* Google Tag Manager */}
@@ -187,16 +202,7 @@ j=d.createElement(s),dl=l!='dataLayer'?"&l="+l:'';j.async=true;j.src=
         {/* Deferred client-only widgets to improve INP/TBT */}
         <DeferredWidgets />
 
-        {/* Minimal Social Links Footer */}
-        <footer className="mt-8 p-4 text-sm text-center text-gray-500">
-          <div className="flex flex-wrap gap-4 justify-center">
-            <a href="https://www.facebook.com/hospelia" target="_blank" rel="noopener noreferrer">Facebook</a>
-            <a href="https://www.instagram.com/hospelia" target="_blank" rel="noopener noreferrer">Instagram</a>
-            <a href="https://www.linkedin.com/company/hospelia" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-            <a href="https://x.com/hospelia" target="_blank" rel="noopener noreferrer">X</a>
-            <a href="https://www.youtube.com/@hospelia" target="_blank" rel="noopener noreferrer">YouTube</a>
-          </div>
-        </footer>
+        <BreadcrumbJsonLd />
 
         {/* Google Analytics optimizado con next/script */}
         <Script

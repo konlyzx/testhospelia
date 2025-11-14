@@ -1,4 +1,5 @@
 import { MetadataRoute } from 'next'
+import { posts } from '@/content/blog/posts'
 
 // Configuración para exportación estática
 export const dynamic = 'force-static';
@@ -131,5 +132,20 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ]
   
-  return staticRoutes
+  const blogRoutes = posts.map(p => ({
+    url: `${baseUrl}/blog/${p.slug}`,
+    lastModified: new Date(p.date),
+    changeFrequency: 'monthly' as const,
+    priority: 0.6,
+  }))
+  const extra = [
+    {
+      url: `${baseUrl}/gracias`,
+      lastModified: new Date(),
+      changeFrequency: 'yearly' as const,
+      priority: 0.3,
+    }
+  ]
+
+  return [...staticRoutes, ...blogRoutes, ...extra]
 }

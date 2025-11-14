@@ -9,6 +9,7 @@ import { getWasiProperties } from '@/services/wasi';
 import type { WasiProperty, WasiApiResponse } from '@/services/wasi';
 import HLoader from '@/app/components/HLoader';
 import HeartIcon from '@/app/components/HeartIcon';
+import Script from 'next/script';
 
 interface WasiPropertiesListProps {
   filters?: {
@@ -146,6 +147,7 @@ const PropertyCard = ({ property, isFavorite, onToggleFavorite }: {
                   src={allImages[currentImageIndex]?.url || allImages[currentImageIndex]?.url_big || '/placeholder-property.jpg'}
                   alt={property.title}
                   fill
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                   className="object-cover group-hover:scale-105 transition-transform duration-300"
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
@@ -292,6 +294,8 @@ const PropertyCard = ({ property, isFavorite, onToggleFavorite }: {
   );
 };
 
+const PropertyCardMemo = React.memo(PropertyCard);
+
 export default function WasiPropertiesList({ filters = {}, className = '' }: WasiPropertiesListProps) {
   const [properties, setProperties] = useState<WasiProperty[]>([]);
   const [loading, setLoading] = useState(true);
@@ -427,7 +431,7 @@ export default function WasiPropertiesList({ filters = {}, className = '' }: Was
       {/* Grid de propiedades estilo Airbnb */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {properties.map((property) => (
-          <PropertyCard
+          <PropertyCardMemo
             key={property.id_property}
             property={property}
             isFavorite={favorites.has(property.id_property)}
@@ -435,6 +439,32 @@ export default function WasiPropertiesList({ filters = {}, className = '' }: Was
           />
         ))}
       </div>
+
+      <Script
+        id="schema-itemlist-properties"
+        type="application/ld+json"
+        strategy="afterInteractive"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'ItemList',
+            itemListElement: properties.map((p, i) => {
+              const slug = (p.title || '')
+                .toLowerCase()
+                .replace(/[^\w\s-]/g, '')
+                .replace(/\s+/g, '-')
+                .replace(/-+/g, '-')
+                .trim() + `-${p.id_property}`;
+              return {
+                '@type': 'ListItem',
+                position: i + 1,
+                url: `https://hospelia.co/propiedad/${slug}`,
+                name: p.title,
+              };
+            })
+          })
+        }}
+      />
 
       {/* Mostrar más resultados */}
       {total > properties.length && (

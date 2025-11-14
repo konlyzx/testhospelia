@@ -10,6 +10,7 @@ import Chatbot from '@/app/components/Chatbot';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { WasiProperty } from '@/services/wasi';
 import { cleanDescription } from '@/utils/textUtils';
+import Script from 'next/script';
 
 // Hook para manejar favoritos optimizado
 const useFavorites = () => {
@@ -99,6 +100,53 @@ export default function PropertyView({ property }: PropertyViewProps) {
     }
     return images.filter(img => img.url);
   }, [property]);
+
+  const buildSlug = (title: string, id: number) => {
+    const slug = (title || '')
+      .toLowerCase()
+      .replace(/[^\w\s-]/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-')
+      .trim();
+    return `${slug}-${id}`;
+  };
+
+  const structuredData = useMemo(() => {
+    const price = property.for_rent === '1' && property.rent_price
+      ? parseInt(property.rent_price, 10)
+      : property.for_sale === '1' && property.sale_price
+        ? parseInt(property.sale_price, 10)
+        : undefined;
+
+    const offer = price !== undefined ? {
+      '@type': 'Offer',
+      price: price,
+      priceCurrency: 'COP',
+      availability: 'https://schema.org/InStock'
+    } : undefined;
+
+    return {
+      '@context': 'https://schema.org',
+      '@type': 'RealEstateListing',
+      name: property.title,
+      url: `https://hospelia.co/propiedad/${buildSlug(property.title, property.id_property)}`,
+      description: cleanDescription(property.description || ''),
+      image: allImages.map(img => img.url),
+      address: {
+        '@type': 'PostalAddress',
+        addressLocality: property.city_label,
+        addressRegion: property.region_label,
+        addressCountry: 'CO'
+      },
+      seller: { '@id': 'https://hospelia.co/#organization' },
+      offers: offer,
+      aggregateRating: {
+        '@type': 'AggregateRating',
+        ratingValue: parseFloat(clientSideValues.rating),
+        reviewCount: clientSideValues.reviews
+      }
+    };
+  }, [property, allImages, clientSideValues]);
 
   const getPropertyPrice = () => {
     if (property.for_rent === '1' && property.rent_price) {
@@ -226,6 +274,12 @@ export default function PropertyView({ property }: PropertyViewProps) {
   return (
     <div className="min-h-screen bg-white">
       <Header />
+      <Script
+        id="schema-realestate-property"
+        type="application/ld+json"
+        strategy="afterInteractive"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
       
       <div className="block sm:hidden fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200">
         <div className="flex items-center justify-between px-4 py-3">
@@ -347,6 +401,7 @@ export default function PropertyView({ property }: PropertyViewProps) {
                     src={allImages[0]?.url || '/zona-default.jpg'}
                     alt={cleanDescription(property.title)}
                     fill
+                    sizes="100vw"
                     className="object-cover"
                     priority
                     placeholder="blur"
@@ -380,6 +435,7 @@ export default function PropertyView({ property }: PropertyViewProps) {
                     src={allImages[0]?.url || '/zona-default.jpg'}
                     alt={cleanDescription(property.title)}
                     fill
+                    sizes="(max-width: 1024px) 100vw, 50vw"
                     className="object-cover group-hover:scale-105 transition-all duration-500"
                     priority
                     placeholder="blur"
@@ -401,6 +457,7 @@ export default function PropertyView({ property }: PropertyViewProps) {
                       src={image.url || '/zona-default.jpg'}
                       alt={`Vista ${index + 2}`}
                       fill
+                      sizes="(max-width: 1024px) 50vw, 25vw"
                       className="object-cover group-hover:scale-105 transition-all duration-500"
                       placeholder="blur"
                       blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
