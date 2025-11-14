@@ -1,4 +1,9 @@
 import { MetadataRoute } from 'next'
+import { posts } from '@/content/blog/posts'
+
+// Configuración para exportación estática
+export const dynamic = 'force-static';
+export const revalidate = false;
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://hospelia.co'
@@ -65,7 +70,82 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'yearly' as const,
       priority: 0.3,
     },
+    {
+      url: `${baseUrl}/apartamentos-amoblados-en-cali`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/alquiler-temporal-en-cali`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/apartamentos-en-bochalema`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/apartamentos-en-el-sur-de-cali`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/apartamentos-por-dias-en-cali`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/airbnb-en-cali`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/alojamiento-amoblado-en-cali`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/apartamentos-cerca-de-univalle`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/alquiler-apartamentos-turisticos-cali`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/apartamentos-amoblados-economicos-cali`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: 0.7,
+    },
   ]
   
-  return staticRoutes
-} 
+  const blogRoutes = posts.map(p => ({
+    url: `${baseUrl}/blog/${p.slug}`,
+    lastModified: new Date(p.date),
+    changeFrequency: 'monthly' as const,
+    priority: 0.6,
+  }))
+  const extra = [
+    {
+      url: `${baseUrl}/gracias`,
+      lastModified: new Date(),
+      changeFrequency: 'yearly' as const,
+      priority: 0.3,
+    }
+  ]
+
+  return [...staticRoutes, ...blogRoutes, ...extra]
+}

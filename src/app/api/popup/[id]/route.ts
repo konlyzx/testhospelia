@@ -9,6 +9,21 @@ interface RouteParams {
   params: Promise<{ id: string }>;
 }
 
+// Configuración para exportación estática
+export const dynamic = 'force-static';
+export const revalidate = false;
+
+// Función para generar rutas estáticas
+export async function generateStaticParams() {
+  return [
+    { id: '1' },
+    { id: '2' },
+    { id: '3' },
+    { id: '4' },
+    { id: '5' }
+  ];
+}
+
 // Función para manejar las solicitudes GET
 export async function GET(
   request: NextRequest,
@@ -97,4 +112,4 @@ export async function OPTIONS() {
       'Access-Control-Allow-Headers': 'Content-Type, Authorization'
     }
   });
-} 
+}

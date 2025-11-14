@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaSpinner } from 'react-icons/fa';
 import { trackReservationConversion, trackWhatsAppClick } from '@/utils/googleAds';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 
 
 declare global {
@@ -51,6 +51,7 @@ export default function PopupReserva({ isOpen, onClose, popupId }: PopupReservaP
   const flatpickrRef = useRef<any>(null);
   const fechasInputRef = useRef<HTMLInputElement>(null);
   const searchParams = useSearchParams();
+  const router = useRouter();
   
   const [formData, setFormData] = useState<FormData>({
     nombre: '',
@@ -445,52 +446,22 @@ Soy ${formData.nombre} y estoy interesado/a en alquilar un apartamento amoblado 
           return encodeURIComponent(mensaje);
         };
 
-        // Abrir WhatsApp después de 1.5 segundos
-        setTimeout(() => {
-          const whatsappUrl = `https://api.whatsapp.com/send?phone=573017546634&text=${createWhatsAppMessage()}`;
-          
-          // Trackear clic en WhatsApp con datos adicionales
-          const whatsappData = {
-            conversion_id: conversionId,
-            popup_id: popupId,
-            utm_params: utmParams,
-            user_data: {
-              nombre: formData.nombre,
-              telefono: formData.telefono_completo
-            }
-          };
-          
-          trackWhatsAppClick(whatsappData);
-          
-          // Evento de Google Analytics para clic en WhatsApp
-          if (typeof window !== 'undefined' && window.gtag) {
-            window.gtag('event', 'whatsapp_click', {
-              event_category: 'engagement',
-              event_label: 'post_conversion_whatsapp',
-              conversion_id: conversionId,
-              popup_id: popupId,
-              ...utmParams
-            });
-          }
-          
-          window.open(whatsappUrl, '_blank');
-        }, 1500);
-        
-        // Cerrar el popup después de 3 segundos
-        setTimeout(() => {
-          onClose();
-          setSubmitted(false);
-          setFormData({
-            nombre: '',
-            prefijo: '+57',
-            telefono: '',
-            telefono_completo: '',
-            habitaciones: '1 HABITACION',
-            presupuesto: '2.800.000 - 3.200.000',
-            email: '',
-            fechas: ''
-          });
-        }, 3000);
+        // Abrir WhatsApp en nueva pestaña y redirigir a Página de Gracias para medición
+        // Abrir WhatsApp (nueva pestaña) y redirigir inmediatamente con router
+        const whatsappUrl = `https://api.whatsapp.com/send?phone=573017546634&text=${createWhatsAppMessage()}`;
+        const whatsappData = {
+          conversion_id: conversionId,
+          popup_id: popupId,
+          utm_params: utmParams,
+          user_data: { nombre: formData.nombre, telefono: formData.telefono_completo }
+        };
+        trackWhatsAppClick(whatsappData);
+        if (typeof window !== 'undefined' && window.gtag) {
+          window.gtag('event', 'whatsapp_click', { event_category: 'engagement', event_label: 'post_conversion_whatsapp', conversion_id: conversionId, popup_id: popupId, ...utmParams });
+        }
+        try { window.open(whatsappUrl, '_blank'); } catch {}
+        const sp = new URLSearchParams({ conv: conversionId, popup: String(popupId || ''), ...(utmParams as any) });
+        router.push(`/gracias?${sp.toString()}`);
       } else {
         throw new Error(`Errores: ${errors.join(', ')}`);
       }

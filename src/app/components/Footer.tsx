@@ -28,6 +28,21 @@ export default function Footer() {
       ],
     },
     {
+      title: "Zonas donde operamos",
+      links: [
+        { name: "Apartamentos amoblados en Cali", href: "/apartamentos-amoblados-en-cali" },
+        { name: "Alquiler temporal en Cali", href: "/alquiler-temporal-en-cali" },
+        { name: "Apartamentos en Bochalema", href: "/apartamentos-en-bochalema" },
+        { name: "Apartamentos en el sur de Cali", href: "/apartamentos-en-el-sur-de-cali" },
+        { name: "Apartamentos por días en Cali", href: "/apartamentos-por-dias-en-cali" },
+        { name: "Airbnb en Cali", href: "/airbnb-en-cali" },
+        { name: "Alojamiento amoblado en Cali", href: "/alojamiento-amoblado-en-cali" },
+        { name: "Apartamentos cerca de Univalle", href: "/apartamentos-cerca-de-univalle" },
+        { name: "Alquiler apartamentos turísticos Cali", href: "/alquiler-apartamentos-turisticos-cali" },
+        { name: "Apartamentos amoblados económicos Cali", href: "/apartamentos-amoblados-economicos-cali" },
+      ],
+    },
+    {
       title: "Anfitriones",
       links: [
         { name: "Hazte anfitrión", href: "/hazte-anfitrion" },
@@ -206,4 +221,4 @@ export default function Footer() {
       </div>
     </footer>
   );
-} 
+}

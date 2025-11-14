@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { wasiService } from '@/services/wasi';
 
+// Configuración para exportación estática
+export const dynamic = 'force-static';
+export const revalidate = false;
+
 export async function GET(request: NextRequest) {
   try {
     
@@ -137,4 +141,4 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     );
   }
-} 
+}

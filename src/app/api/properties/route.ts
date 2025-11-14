@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getAllProperties } from '@/services/properties';
 
-export const revalidate = 300; // Revalidar cada 5 minutos
-export const dynamic = 'force-static'; // Forzar generación estática donde sea posible
+// Configuración para exportación estática
+export const dynamic = 'force-static';
+export const revalidate = false;
 
 export async function GET(request: NextRequest) {
   try {
@@ -95,4 +96,4 @@ export async function GET(request: NextRequest) {
       }
     );
   }
-} 
+}

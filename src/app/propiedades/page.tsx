@@ -1,5 +1,6 @@
 import React from 'react';
 import { Metadata } from 'next';
+import Script from 'next/script';
 
 export const metadata: Metadata = {
   title: 'Todas las Propiedades | Hospelia',
@@ -10,6 +11,25 @@ export default function PropertiesPage() {
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center">
       <div className="text-center max-w-md mx-auto px-4">
+        <Script
+          id="schema-itemlist-propiedades"
+          type="application/ld+json"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'ItemList',
+              itemListElement: [
+                {
+                  '@type': 'ListItem',
+                  position: 1,
+                  name: 'Propiedades',
+                  url: 'https://hospelia.co/propiedades'
+                }
+              ]
+            })
+          }}
+        />
         <h1 className="text-3xl font-bold text-gray-900 mb-4">
           Propiedades Disponibles
         </h1>

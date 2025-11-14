@@ -10,6 +10,7 @@ import { WordPressProperty, getAllProperties } from "@/services/wordpress";
 import { extraerZonaAmigable } from "@/utils/zoneUtils";
 import PropertyPrice from "./components/PropertyPrice";
 import Image from "next/image";
+import DestinationCover from "./components/DestinationCover";
 import type { WasiProperty } from "@/services/wasi";
 import HLoader from "./components/HLoader";
 import HeartIcon from "./components/HeartIcon";
@@ -1033,8 +1034,63 @@ export default function Home() {
     <div className="bg-white min-h-screen">
       <Header />
 
+      <div className="relative pt-24 sm:pt-20 lg:pt-24 pb-10 bg-gradient-to-br from-blue-600 via-blue-500 to-indigo-600">
+        <div className="absolute inset-0 bg-black/20" />
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+            <div>
+              <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
+                <div className="inline-flex items-center px-4 py-2 bg-white/15 backdrop-blur-sm border border-white/30 rounded-full text-white/90 text-xs font-semibold mb-4">Vive mejor en Cali</div>
+                <h1 className="text-3xl sm:text-5xl font-extrabold text-white leading-tight">{t('home.hero.title')} <span className="text-blue-200">{t('home.hero.highlight')}</span></h1>
+                <p className="mt-4 text-white/90 text-lg max-w-xl">{t('home.hero.subtitle')}</p>
+                <div className="mt-6 flex items-center gap-4">
+                  <div className="flex items-center text-white/90"><svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>Propiedades verificadas</div>
+                  <div className="flex items-center text-white/90"><svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m4 0h-1V9a2 2 0 00-2-2H9m4 0h1a2 2 0 012 2v3m-6 4h6" /></svg>Reserva segura</div>
+                </div>
+              </motion.div>
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2 }} className="mt-8 bg-white rounded-2xl shadow-2xl border border-white/20 p-3">
+                <div className="flex flex-col lg:flex-row gap-2">
+                  <div className="flex-1 px-4 py-3 rounded-xl bg-gray-50">
+                    <label className="text-xs font-bold text-gray-900">Destino</label>
+                    <select id="destino" name="destino" value={filters.search} onChange={(e) => handleFilterChange('search', e.target.value)} className="w-full text-sm font-medium bg-transparent border-none outline-none">
+                      <option value="">Explora destinos</option>
+                      <option value="Cali">Cali</option>
+                    </select>
+                  </div>
+                  <div className="flex-1 px-4 py-3 rounded-xl bg-gray-50">
+                    <label className="text-xs font-bold text-gray-900">Habitaciones</label>
+                    <select id="habitaciones" name="habitaciones" value={filters.bedrooms || ''} onChange={(e) => handleFilterChange('bedrooms', e.target.value ? parseInt(e.target.value) : undefined)} className="w-full text-sm font-medium bg-transparent border-none outline-none">
+                      <option value="">¿Cuántas?</option>
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                      <option value="3">3+</option>
+                    </select>
+                  </div>
+                  <div className="flex-1 px-4 py-3 rounded-xl bg-gray-50">
+                    <label className="text-xs font-bold text-gray-900">Presupuesto</label>
+                    <select id="presupuesto" name="presupuesto" value={filters.min_price === 2800000 && filters.max_price === 3600000 ? '2800000-3600000' : filters.min_price === 4000000 ? '4000000+' : ''} onChange={(e) => { const value = e.target.value; if (value === '2800000-3600000') { handleFilterChange('min_price', 2800000); handleFilterChange('max_price', 3600000); } else if (value === '4000000+') { handleFilterChange('min_price', 4000000); handleFilterChange('max_price', undefined); } else { handleFilterChange('min_price', undefined); handleFilterChange('max_price', undefined); } }} className="w-full text-sm font-medium bg-transparent border-none outline-none">
+                      <option value="">¿Cuánto?</option>
+                      <option value="2800000-3600000">$2.8M - $3.6M</option>
+                      <option value="4000000+">$4.0M+</option>
+                    </select>
+                  </div>
+                  <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }} onClick={() => { const s = document.querySelector('[data-results-section]'); if (s) s.scrollIntoView({ behavior: 'smooth' }); }} className="w-full lg:w-auto px-6 py-3 rounded-xl bg-blue-600 text-white font-semibold">Buscar</motion.button>
+                </div>
+              </motion.div>
+            </div>
+            <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8 }} className="hidden lg:block">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="relative h-56 rounded-2xl overflow-hidden shadow-xl"><Image src="/zona-default.jpg" alt="Alojamiento 1" fill className="object-cover" /></div>
+                <div className="relative h-56 rounded-2xl overflow-hidden shadow-xl"><Image src="/zona-default.jpg" alt="Alojamiento 2" fill className="object-cover" /></div>
+                <div className="relative h-56 rounded-2xl overflow-hidden shadow-xl col-span-2"><Image src="/zona-default.jpg" alt="Alojamiento 3" fill className="object-cover" /></div>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </div>
+
       {/* Hero Section con slider de banners y filtros estilo Airbnb */}
-      <div className="relative pt-24 sm:pt-20 lg:pt-24 pb-8 sm:pb-12 lg:pb-16 hero-gradient">
+      <div className="hidden relative pt-24 sm:pt-20 lg:pt-24 pb-8 sm:pb-12 lg:pb-16 hero-gradient">
         
             {/* Overlay oscuro para legibilidad */}
             <div className="absolute inset-0 bg-black/30" />
@@ -1186,6 +1242,36 @@ export default function Home() {
         </div>
       </div>
 
+      <div className="bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-bold text-gray-900">Explora destinos</h2>
+            <Link href="/destinos" className="text-blue-600 font-semibold">Ver todos</Link>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <Link href="/destinos/apartamentos-en-el-sur-de-cali" className="group relative rounded-2xl overflow-hidden bg-gray-100 h-40">
+              <DestinationCover slug="apartamentos-en-el-sur-de-cali" title="Sur de Cali" />
+              <div className="absolute inset-0 bg-black/20" />
+              <div className="absolute bottom-3 left-3 text-white font-semibold">Sur de Cali</div>
+            </Link>
+            <Link href="/destinos/apartamentos-por-dias-en-cali" className="group relative rounded-2xl overflow-hidden bg-gray-100 h-40">
+              <DestinationCover slug="apartamentos-por-dias-en-cali" title="Por días" />
+              <div className="absolute inset-0 bg-black/20" />
+              <div className="absolute bottom-3 left-3 text-white font-semibold">Por días</div>
+            </Link>
+            <Link href="/destinos/apartamentos-en-bochalema" className="group relative rounded-2xl overflow-hidden bg-gray-100 h-40">
+              <DestinationCover slug="apartamentos-en-bochalema" title="Bochalema" />
+              <div className="absolute inset-0 bg-black/20" />
+              <div className="absolute bottom-3 left-3 text-white font-semibold">Bochalema</div>
+            </Link>
+            <Link href="/destinos/apartamentos-cerca-de-univalle" className="group relative rounded-2xl overflow-hidden bg-gray-100 h-40">
+              <DestinationCover slug="apartamentos-cerca-de-univalle" title="Cerca de Univalle" />
+              <div className="absolute inset-0 bg-black/20" />
+              <div className="absolute bottom-3 left-3 text-white font-semibold">Cerca de Univalle</div>
+            </Link>
+          </div>
+        </div>
+      </div>
       {/* Filter Bar Estilo Airbnb */}
       <div className="" style={{ top: '80px' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 sm:py-3 lg:py-4">
