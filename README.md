@@ -1,4 +1,4 @@
-# 🏠 Hospelia - Plataforma de Alojamientos con IA
+# 🏠 Hospelia - Plataforma de Alojamientos
 
 > **Encuentra tu hogar perfecto con tecnología de vanguardia**
 
