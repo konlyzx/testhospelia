@@ -65,7 +65,7 @@ export function middleware(request: NextRequest) {
   response.headers.set('X-Content-Type-Options', 'nosniff');
   response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
   response.headers.set('x-nonce', nonce);
-  response.headers.set('Content-Security-Policy', `script-src 'self' 'unsafe-inline' 'nonce-${nonce}' https://www.googletagmanager.com https://www.google-analytics.com https://connect.facebook.net https://cdn.jsdelivr.net https://analytics.ahrefs.com; script-src-elem 'self' https://www.googletagmanager.com https://www.google-analytics.com https://connect.facebook.net https://cdn.jsdelivr.net https://analytics.ahrefs.com; img-src 'self' data: https:; connect-src 'self' https:;`);
+  response.headers.set('Content-Security-Policy', `script-src 'self' 'unsafe-inline' 'nonce-${nonce}' https://www.googletagmanager.com https://www.google-analytics.com https://connect.facebook.net https://cdn.jsdelivr.net https://analytics.ahrefs.com; script-src-elem 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://connect.facebook.net https://cdn.jsdelivr.net https://analytics.ahrefs.com; img-src 'self' data: https:; connect-src 'self' https:;`);
   
   // Preconnect headers para optimizar conexiones
   const linkHeader = [
