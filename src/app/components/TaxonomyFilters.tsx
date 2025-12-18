@@ -66,10 +66,6 @@ const TaxonomyFilters: React.FC<TaxonomyFiltersProps> = ({
       setAreas(areasData);
       setTypes(typesData);
 
-        areas: areasData.length,
-        types: typesData.length
-      });
-
     } catch (error) {
       console.error('❌ Error cargando taxonomías:', error);
     } finally {
@@ -330,4 +326,4 @@ const TaxonomyFilters: React.FC<TaxonomyFiltersProps> = ({
   );
 };
 
-export default TaxonomyFilters; 
+export default TaxonomyFilters;

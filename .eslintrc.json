@@ -8,4 +8,4 @@
     "@next/next/no-img-element": "warn",
     "prefer-const": "warn"
   }
-} 
+}

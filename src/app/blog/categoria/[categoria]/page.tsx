@@ -17,12 +17,13 @@ export async function generateMetadata({ params }: { params: { categoria: string
   return { title, description: 'Artículos por categoría', alternates: { canonical: url } }
 }
 
-export default function BlogCategoryPage({ params }: { params: { categoria: string } }) {
+export default async function BlogCategoryPage(props: { params: Promise<{ categoria: string }> }) {
+  const params = await props.params;
   const list = posts.filter(p => p.category === params.categoria)
   return (
     <div className="bg-white min-h-screen">
       <Header />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-12">
         <h1 className="text-3xl font-bold text-gray-900 mb-8">Categoría: {params.categoria}</h1>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {list.map((p) => (

@@ -2,7 +2,7 @@
 
 import React from 'react'
 
-export default function DestinosControls({
+export default function PaginationControls({
   page,
   hasNext,
   order,
@@ -47,10 +47,9 @@ export default function DestinosControls({
         </div>
       </div>
       <div className="flex items-center gap-2">
-        <button className="px-4 py-2 border rounded-md" disabled={page<=1} onClick={prev}>Anterior</button>
-        <button className="px-4 py-2 border rounded-md" disabled={!hasNext} onClick={next}>Siguiente</button>
+        <button className="px-4 py-2 border rounded-md disabled:opacity-50" disabled={page<=1} onClick={prev}>Anterior</button>
+        <button className="px-4 py-2 border rounded-md disabled:opacity-50" disabled={!hasNext} onClick={next}>Siguiente</button>
       </div>
     </div>
   )
 }
-

@@ -53,13 +53,13 @@ const CompanyLogo = ({ company, index }: { company: typeof companies[0], index: 
       }
     }}
   >
-    <div className="w-32 h-16 md:w-40 md:h-20 lg:w-44 lg:h-22 bg-white rounded-lg shadow-sm border border-gray-100 flex items-center justify-center p-3 md:p-4 group-hover:shadow-lg group-hover:border-gray-300 group-hover:scale-105 transition-all duration-300">
+    <div className="w-32 h-16 md:w-44 md:h-24 bg-white rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.04)] hover:shadow-[0_8px_16px_rgba(0,0,0,0.08)] border border-gray-100/50 flex items-center justify-center p-4 md:p-6 group-hover:scale-105 transition-all duration-300">
       <Image
         src={company.logo}
         alt={`Logo de ${company.name}`}
-        width={120}
-        height={50}
-        className="max-w-full max-h-full object-contain filter grayscale group-hover:grayscale-0 transition-all duration-300"
+        width={140}
+        height={60}
+        className="max-w-full max-h-full object-contain filter grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300"
         onError={(e) => {
           console.error(`Error cargando logo de ${company.name}:`, company.logo);
           const target = e.target as HTMLImageElement;
@@ -73,43 +73,67 @@ const CompanyLogo = ({ company, index }: { company: typeof companies[0], index: 
 export default function TrustedBy() {
   return (
     <motion.section 
-      className="py-16 bg-gray-50"
-      initial={{ opacity: 0, y: 50 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      className="py-20 bg-gray-50 overflow-hidden"
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
       viewport={{ once: true }}
-      transition={{ duration: 0.6 }}
+      transition={{ duration: 0.8 }}
     >
-      <div className="container mx-auto px-4">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Hemos trabajado con
-          </h2>
-          <p className="text-gray-600 max-w-2xl mx-auto">
-            Empresas líderes confían en nosotros para sus necesidades de hospedaje y alojamiento corporativo
-          </p>
-        </div>
-
-        {/* Carrusel infinito */}
-        <div className="relative overflow-hidden">
-          <div 
-            className="flex animate-scroll" 
-            style={{ width: 'calc(100% * 3)' }}
+      <div className="container mx-auto px-4 mb-12">
+        <div className="text-center max-w-3xl mx-auto">
+          <motion.span 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="inline-block py-1 px-3 rounded-full bg-blue-50 text-blue-600 text-sm font-semibold mb-4 border border-blue-100"
           >
-            {/* Primera serie de logos */}
-            {companies.map((company, index) => (
-              <CompanyLogo key={`first-${index}`} company={company} index={index} />
-            ))}
-            
-            {/* Segunda serie de logos para continuidad */}
-            {companies.map((company, index) => (
-              <CompanyLogo key={`second-${index}`} company={company} index={index} />
-            ))}
+            Nuestros Aliados
+          </motion.span>
+          <motion.h2 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 }}
+            className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 tracking-tight"
+          >
+            Hemos trabajado con
+          </motion.h2>
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+            className="text-gray-600 text-lg"
+          >
+            Empresas líderes confían en nosotros para sus necesidades de hospedaje y alojamiento corporativo
+          </motion.p>
+        </div>
+      </div>
 
-            {/* Tercera serie de logos para continuidad */}
-            {companies.map((company, index) => (
-              <CompanyLogo key={`third-${index}`} company={company} index={index} />
-            ))}
-          </div>
+      {/* Carrusel infinito */}
+      <div className="relative w-full">
+        {/* Gradients de desvanecimiento */}
+        <div className="absolute top-0 left-0 z-10 w-32 h-full bg-gradient-to-r from-gray-50 to-transparent pointer-events-none" />
+        <div className="absolute top-0 right-0 z-10 w-32 h-full bg-gradient-to-l from-gray-50 to-transparent pointer-events-none" />
+        
+        <div 
+          className="flex animate-scroll" 
+          style={{ width: 'calc(100% * 3)' }}
+        >
+          {/* Primera serie de logos */}
+          {companies.map((company, index) => (
+            <CompanyLogo key={`first-${index}`} company={company} index={index} />
+          ))}
+          
+          {/* Segunda serie de logos para continuidad */}
+          {companies.map((company, index) => (
+            <CompanyLogo key={`second-${index}`} company={company} index={index} />
+          ))}
+
+          {/* Tercera serie de logos para continuidad */}
+          {companies.map((company, index) => (
+            <CompanyLogo key={`third-${index}`} company={company} index={index} />
+          ))}
         </div>
       </div>
     </motion.section>

@@ -19,8 +19,8 @@ export default function BlogPage() {
   return (
     <div className="bg-white min-h-screen">
       <Header />
-      <section className="bg-gradient-to-br from-blue-600 via-blue-500 to-indigo-600 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 sm:pt-36 lg:pt-40 pb-16">
+      <section className="bg-gradient-to-br from-blue-600 via-blue-500 to-indigo-600 text-white min-h-[80vh] flex items-center relative">
+        <div className="w-full max-w-7xl mx-auto px-6 md:px-12 pt-24 pb-12">
           <h1 className="text-4xl sm:text-5xl font-extrabold leading-tight">Alojamientos en Cali</h1>
           <p className="mt-3 text-lg sm:text-xl text-white/90 max-w-2xl">Guías y consejos optimizados para SEO local sobre hospedaje en Cali.</p>
           <div className="mt-6 flex flex-col sm:flex-row gap-3">

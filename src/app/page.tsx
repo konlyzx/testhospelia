@@ -5,7 +5,7 @@ import Footer from "./components/Footer";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { IoMdClose } from "react-icons/io";
-import { FaWhatsapp } from "react-icons/fa";
+import { FaWhatsapp, FaCheckCircle, FaShieldAlt, FaStar, FaSearch } from "react-icons/fa";
 import { WordPressProperty, getAllProperties } from "@/services/wordpress";
 import { extraerZonaAmigable } from "@/utils/zoneUtils";
 import PropertyPrice from "./components/PropertyPrice";
@@ -19,6 +19,9 @@ import { trackWhatsAppConversion } from '@/utils/googleAds';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useCurrency } from '@/contexts/CurrencyContext';
 import { useRecommendations } from '@/contexts/RecommendationContext';
+import PropertyCard from "@/components/PropertyCard";
+import PropertyListItem from "@/components/PropertyListItem";
+import { toDestProperty } from "@/utils/propertyUtils";
 
 // Lazy loading para componentes no críticos
 const BlogSection = lazy(() => import("./components/BlogSection"));
@@ -124,667 +127,6 @@ const FavoritesButton = () => {
           </span>
         )}
       </button>
-    </Link>
-  );
-};
-
-
-const PropertyCard = ({
-  property,
-  isFavorite,
-  onToggleFavorite,
-}: {
-  property: WasiProperty;
-  isFavorite: boolean;
-  onToggleFavorite: () => void;
-}) => {
-  const { t } = useLanguage();
-  const { formatPrice: formatPriceCurrency } = useCurrency();
-  const { trackActivity } = useRecommendations();
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [isHovered, setIsHovered] = useState(false);
-
-  const allImages = [
-    property.main_image,
-    ...(property.galleries || []).flatMap((gallery) =>
-      Object.values(gallery).filter(
-        (item) => typeof item === "object" && item !== null && "url" in item
-      )
-    ),
-  ].filter(Boolean);
-
-  const formatPrice = (price: string, priceLabel: string) => {
-    if (!price || price === "0") return "Consultar precio";
-    return priceLabel || `$${parseInt(price).toLocaleString("es-CO")}`;
-  };
-
-  const getMainPrice = () => {
-    if (property.for_rent === "true" && property.rent_price !== "0") {
-      return {
-        price: formatPriceCurrency(parseInt(property.rent_price)),
-        period: t('property.price.month'),
-        type: "rent",
-      };
-    }
-    if (property.for_sale === "true" && property.sale_price !== "0") {
-      return {
-        price: formatPriceCurrency(parseInt(property.sale_price)),
-        period: "",
-        type: "sale",
-      };
-    }
-    return { price: t('property.price.consult'), period: "", type: "consult" };
-  };
-
-  const mainPrice = getMainPrice();
-
-  const createSlug = (title: string, id: number) => {
-    const slug = title
-      .toLowerCase()
-      .replace(/[^\w\s-]/g, "")
-      .replace(/\s+/g, "-")
-      .replace(/-+/g, "-")
-      .trim();
-    return `${slug}-${id}`;
-  };
-
-  const propertySlug = createSlug(property.title, property.id_property);
-
-  const nextImage = () => {
-    setCurrentImageIndex((prev) => (prev + 1) % allImages.length);
-  };
-
-  const prevImage = () => {
-    setCurrentImageIndex(
-      (prev) => (prev - 1 + allImages.length) % allImages.length
-    );
-  };
-
-  return (
-    <Link href={`/propiedad/${propertySlug}`}>
-      <div
-        className="group cursor-pointer transition-all duration-500 ease-out"
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-      >
-        <div className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-2xl hover:border-gray-200 transition-all duration-500 hover:-translate-y-2">
-          <div className="relative">
-            <div className="relative aspect-[4/3] overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200">
-              {allImages.length > 0 ? (
-                <>
-                  <Image
-                    src={
-                      allImages[currentImageIndex]?.url ||
-                      allImages[currentImageIndex]?.url_big ||
-                      "/placeholder-property.jpg"
-                    }
-                    alt={property.title}
-                    fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-110"
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      target.src = "/placeholder-property.jpg";
-                    }}
-                  />
-
-                  {/* Overlay gradient sutil */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
-                  {/* Navegación de imágenes mejorada */}
-                  {allImages.length > 1 && isHovered && (
-                    <>
-                      <button
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          prevImage();
-                        }}
-                        className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/90 backdrop-blur-sm hover:bg-white rounded-full p-3 shadow-lg transition-all duration-300 opacity-0 group-hover:opacity-100 hover:scale-110"
-                      >
-                        <svg
-                          className="w-5 h-5 text-gray-700"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M15 19l-7-7 7-7"
-                          />
-                        </svg>
-                      </button>
-
-                      <button
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          nextImage();
-                        }}
-                        className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/90 backdrop-blur-sm hover:bg-white rounded-full p-3 shadow-lg transition-all duration-300 opacity-0 group-hover:opacity-100 hover:scale-110"
-                      >
-                        <svg
-                          className="w-5 h-5 text-gray-700"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M9 5l7 7-7 7"
-                          />
-                        </svg>
-                      </button>
-                    </>
-                  )}
-
-                  {/* Dots indicadores mejorados */}
-                  {allImages.length > 1 && (
-                    <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
-                      {allImages.map((_, index) => (
-                        <button
-                          key={index}
-                          onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            setCurrentImageIndex(index);
-                          }}
-                          className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
-                            index === currentImageIndex
-                              ? "bg-white shadow-lg scale-125"
-                              : "bg-white/60 hover:bg-white/80 hover:scale-110"
-                          }`}
-                        />
-                      ))}
-                    </div>
-                  )}
-                </>
-              ) : (
-                <div className="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-                  <svg
-                    className="w-16 h-16 text-gray-400"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={1}
-                      d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                    />
-                  </svg>
-                </div>
-              )}
-            </div>
-
-            {/* Botón de favoritos mejorado */}
-            <button
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                onToggleFavorite();
-              }}
-              className={`absolute top-3 right-3 z-10 p-2 rounded-full transition-all duration-300 ${
-                isFavorite
-                  ? "bg-red-500 text-white shadow-lg scale-110"
-                  : "bg-white/90 text-gray-600 hover:bg-white hover:scale-105"
-              } backdrop-blur-sm shadow-md hover:shadow-lg`}
-            >
-              <HeartIcon
-                size={20}
-                filled={isFavorite}
-                className={isFavorite ? "text-white" : "text-gray-600"}
-              />
-            </button>
-
-            {/* Badge de tipo de propiedad */}
-            <div className="absolute top-4 left-4">
-              {property.for_rent === "true" && property.for_sale === "true" ? (
-                <span className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-3 py-1.5 rounded-full text-xs font-semibold shadow-lg backdrop-blur-sm">
-                  Renta/Venta
-                </span>
-              ) : property.for_rent === "true" ? (
-                <span className="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-3 py-1.5 rounded-full text-xs font-semibold shadow-lg backdrop-blur-sm">
-                  Para Renta
-                </span>
-              ) : property.for_sale === "true" ? (
-                <span className="bg-gradient-to-r from-orange-500 to-red-600 text-white px-3 py-1.5 rounded-full text-xs font-semibold shadow-lg backdrop-blur-sm">
-                  En Venta
-                </span>
-              ) : null}
-            </div>
-          </div>
-
-          {/* Información de la propiedad mejorada */}
-          <div className="p-10">
-            {/* Header con ubicación y rating */}
-            <div className="flex items-start justify-between mb-4">
-              <div className="flex-1">
-                <h3 className="font-bold text-gray-900 text-xl mb-2 leading-tight">
-                  {property.zone_label || property.city_label || "Cali"}
-                </h3>
-                <p className="text-gray-600 text-base font-medium">Colombia</p>
-              </div>
-              <div className="flex items-center bg-gray-50 rounded-lg px-3 py-2 ml-3">
-                <svg
-                  className="w-5 h-5 text-yellow-500 fill-current"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-                </svg>
-                <span className="ml-2 text-base text-gray-700 font-semibold">
-                  4.9
-                </span>
-              </div>
-            </div>
-
-            {/* Título de la propiedad */}
-            <h4
-              className="text-gray-800 font-semibold text-lg mb-4 leading-tight overflow-hidden"
-              style={{
-                display: "-webkit-box",
-                WebkitLineClamp: 2,
-                WebkitBoxOrient: "vertical",
-              }}
-            >
-              {property.title}
-            </h4>
-
-            {/* Características con iconos mejorados */}
-            <div className="flex items-center gap-5 mb-5">
-              <div className="flex items-center text-gray-600">
-                <div className="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center mr-3">
-                  <svg
-                    className="w-5 h-5 text-blue-600"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2V7zm0 0a2 2 0 012 0m14 0a2 2 0 012 0"
-                    />
-                  </svg>
-                </div>
-                <span className="text-base font-medium">
-                  {property.bedrooms && parseInt(property.bedrooms) > 0
-                    ? `${property.bedrooms} hab`
-                    : "Estudio"}
-                </span>
-              </div>
-
-              {property.bathrooms && parseInt(property.bathrooms) > 0 && (
-                <div className="flex items-center text-gray-600">
-                  <div className="w-10 h-10 bg-purple-50 rounded-xl flex items-center justify-center mr-3">
-                    <svg
-                      className="w-5 h-5 text-purple-600"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"
-                      />
-                    </svg>
-                  </div>
-                  <span className="text-base font-medium">
-                    {property.bathrooms} baños
-                  </span>
-                </div>
-              )}
-
-              {property.area && (
-                <div className="flex items-center text-gray-600">
-                  <div className="w-10 h-10 bg-green-50 rounded-xl flex items-center justify-center mr-3">
-                    <svg
-                      className="w-5 h-5 text-green-600"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"
-                      />
-                    </svg>
-                  </div>
-                  <span className="text-base font-medium">
-                    {property.area}m²
-                  </span>
-                </div>
-              )}
-            </div>
-
-            {/* Precio destacado */}
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gray-900 font-bold text-2xl">
-                  {mainPrice.price}
-                  {mainPrice.period && (
-                    <span className="font-normal text-lg text-gray-500 ml-1">
-                      {mainPrice.period}
-                    </span>
-                  )}
-                </p>
-                {mainPrice.type === "rent" && (
-                  <p className="text-gray-500 text-base mt-1">
-                    Precio por Mes
-                  </p>
-                )}
-              </div>
-
-              {/* Botón CTA sutil */}
-              <button className="ml-3 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-7 py-3 rounded-xl font-semibold text-base transition-all duration-300 hover:shadow-lg hover:scale-105 opacity-0 group-hover:opacity-100">
-                Ver detalles
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </Link>
-  );
-};
-
-// Componente para vista de lista
-const PropertyListItem = ({
-  property,
-  isFavorite,
-  onToggleFavorite,
-}: {
-  property: WasiProperty;
-  isFavorite: boolean;
-  onToggleFavorite: () => void;
-}) => {
-  const { t } = useLanguage();
-  const { formatPrice: formatPriceCurrency } = useCurrency();
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-
-  // Obtener todas las imágenes disponibles
-  const allImages = [
-    property.main_image,
-    ...(property.galleries || []).flatMap((gallery) =>
-      Object.values(gallery).filter(
-        (item) => typeof item === "object" && item !== null && "url" in item
-      )
-    ),
-  ].filter(Boolean);
-
-  const formatPrice = (price: string, priceLabel: string) => {
-    if (!price || price === "0") return "Consultar precio";
-    return priceLabel || `$${parseInt(price).toLocaleString("es-CO")}`;
-  };
-
-  const getMainPrice = () => {
-    if (property.for_rent === "true" && property.rent_price !== "0") {
-      return {
-        price: formatPriceCurrency(parseInt(property.rent_price)),
-        period: t('property.price.month'),
-        type: "rent",
-      };
-    }
-    if (property.for_sale === "true" && property.sale_price !== "0") {
-      return {
-        price: formatPriceCurrency(parseInt(property.sale_price)),
-        period: "",
-        type: "sale",
-      };
-    }
-    return { price: t('property.price.consult'), period: "", type: "consult" };
-  };
-
-  const mainPrice = getMainPrice();
-
-  const createSlug = (title: string, id: number) => {
-    const slug = title
-      .toLowerCase()
-      .replace(/[^\w\s-]/g, "")
-      .replace(/\s+/g, "-")
-      .replace(/-+/g, "-")
-      .trim();
-    return `${slug}-${id}`;
-  };
-
-  const propertySlug = createSlug(property.title, property.id_property);
-
-  return (
-    <Link href={`/propiedad/${propertySlug}`}>
-      <div className="group cursor-pointer bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-2xl hover:border-gray-200 transition-all duration-500 hover:-translate-y-1">
-        <div className="flex flex-col lg:flex-row">
-          {/* Sección de imagen - más grande en vista lista */}
-          <div className="relative lg:w-[400px] lg:flex-shrink-0">
-            <div className="relative aspect-[4/3] lg:aspect-[5/4] lg:h-[320px] overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200">
-              {allImages.length > 0 ? (
-                <>
-                  <Image
-                    src={
-                      allImages[currentImageIndex]?.url ||
-                      allImages[currentImageIndex]?.url_big ||
-                      "/placeholder-property.jpg"
-                    }
-                    alt={property.title}
-                    fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-110"
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      target.src = "/placeholder-property.jpg";
-                    }}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                </>
-              ) : (
-                <div className="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-                  <svg
-                    className="w-20 h-20 text-gray-400"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={1}
-                      d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                    />
-                  </svg>
-                </div>
-              )}
-            </div>
-
-            {/* Botón de favoritos */}
-            <button
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                onToggleFavorite();
-              }}
-              className={`absolute top-3 right-3 z-10 p-2 rounded-full transition-all duration-300 ${
-                isFavorite
-                  ? "bg-red-500 text-white shadow-lg scale-110"
-                  : "bg-white/90 text-gray-600 hover:bg-white hover:scale-105"
-              } backdrop-blur-sm shadow-md hover:shadow-lg`}
-            >
-              <HeartIcon
-                size={20}
-                filled={isFavorite}
-                className={isFavorite ? "text-white" : "text-gray-600"}
-              />
-            </button>
-
-            {/* Badge de tipo de propiedad */}
-            <div className="absolute top-4 left-4">
-              {property.for_rent === "true" && property.for_sale === "true" ? (
-                <span className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-3 py-1.5 rounded-full text-xs font-semibold shadow-lg backdrop-blur-sm">
-                  Renta/Venta
-                </span>
-              ) : property.for_rent === "true" ? (
-                <span className="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-3 py-1.5 rounded-full text-xs font-semibold shadow-lg backdrop-blur-sm">
-                  Para Renta
-                </span>
-              ) : property.for_sale === "true" ? (
-                <span className="bg-gradient-to-r from-orange-500 to-red-600 text-white px-3 py-1.5 rounded-full text-xs font-semibold shadow-lg backdrop-blur-sm">
-                  En Venta
-                </span>
-              ) : null}
-            </div>
-          </div>
-
-          {/* Información de la propiedad - layout horizontal */}
-          <div className="flex-1 p-8 lg:p-10 flex flex-col justify-between lg:min-h-[320px]">
-            {/* Sección superior */}
-            <div>
-              <div className="flex justify-between items-start mb-4">
-                {/* Ubicación y rating */}
-                <div className="flex-1">
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className="font-bold text-gray-900 text-2xl">
-                      {property.zone_label || property.city_label || "Cali"}
-                    </h3>
-                    <div className="flex items-center bg-gray-50 rounded-lg px-3 py-2 ml-4">
-                      <svg
-                        className="w-5 h-5 text-yellow-500 fill-current"
-                        viewBox="0 0 24 24"
-                      >
-                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-                      </svg>
-                      <span className="ml-2 text-base text-gray-700 font-semibold">
-                        4.9
-                      </span>
-                    </div>
-                  </div>
-                  <p className="text-gray-600 text-base font-medium mb-1">
-                    Colombia
-                  </p>
-                </div>
-              </div>
-
-              {/* Título de la propiedad */}
-              <h4 className="text-gray-800 font-semibold text-xl mb-4 leading-tight">
-                {property.title}
-              </h4>
-
-              {/* Características en una sola línea */}
-              <div className="flex items-center gap-8 mb-6">
-                <div className="flex items-center text-gray-600">
-                  <div className="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center mr-3">
-                    <svg
-                      className="w-5 h-5 text-blue-600"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2V7zm0 0a2 2 0 012 0m14 0a2 2 0 012 0"
-                      />
-                    </svg>
-                  </div>
-                  <div>
-                    <span className="text-base font-semibold text-gray-900">
-                      {property.bedrooms && parseInt(property.bedrooms) > 0
-                        ? `${property.bedrooms}`
-                        : "0"}
-                    </span>
-                    <span className="text-sm text-gray-600 ml-1">
-                      {property.bedrooms && parseInt(property.bedrooms) > 0
-                        ? "habitaciones"
-                        : "estudio"}
-                    </span>
-                  </div>
-                </div>
-
-                {property.bathrooms && parseInt(property.bathrooms) > 0 && (
-                  <div className="flex items-center text-gray-600">
-                    <div className="w-10 h-10 bg-purple-50 rounded-xl flex items-center justify-center mr-3">
-                      <svg
-                        className="w-5 h-5 text-purple-600"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"
-                        />
-                      </svg>
-                    </div>
-                    <div>
-                      <span className="text-base font-semibold text-gray-900">
-                        {property.bathrooms}
-                      </span>
-                      <span className="text-sm text-gray-600 ml-1">baños</span>
-                    </div>
-                  </div>
-                )}
-
-                {property.area && (
-                  <div className="flex items-center text-gray-600">
-                    <div className="w-10 h-10 bg-green-50 rounded-xl flex items-center justify-center mr-3">
-                      <svg
-                        className="w-5 h-5 text-green-600"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"
-                        />
-                      </svg>
-                    </div>
-                    <div>
-                      <span className="text-base font-semibold text-gray-900">
-                        {property.area}
-                      </span>
-                      <span className="text-sm text-gray-600 ml-1">m²</span>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Precio y botón de acción - Sección inferior */}
-            <div className="flex items-center justify-between mt-auto">
-              <div>
-                <p className="text-gray-900 font-bold text-3xl">
-                  {mainPrice.price}
-                  {mainPrice.period && (
-                    <span className="font-normal text-xl text-gray-500 ml-2">
-                      {mainPrice.period}
-                    </span>
-                  )}
-                </p>
-                {mainPrice.type === "rent" && (
-                  <p className="text-gray-500 text-base mt-1">
-                    Precio por mes
-                  </p>
-                )}
-              </div>
-
-              {/* Botón CTA más prominente */}
-              <button className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-8 py-4 rounded-2xl font-semibold text-base transition-all duration-300 hover:shadow-lg hover:scale-105">
-                Ver detalles
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
     </Link>
   );
 };
@@ -1034,58 +376,125 @@ export default function Home() {
     <div className="bg-white min-h-screen">
       <Header />
 
-      <div className="relative pt-24 sm:pt-20 lg:pt-24 pb-10 bg-gradient-to-br from-blue-600 via-blue-500 to-indigo-600">
-        <div className="absolute inset-0 bg-black/20" />
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
-            <div>
-              <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
-                <div className="inline-flex items-center px-4 py-2 bg-white/15 backdrop-blur-sm border border-white/30 rounded-full text-white/90 text-xs font-semibold mb-4">Vive mejor en Cali</div>
-                <h1 className="text-3xl sm:text-5xl font-extrabold text-white leading-tight">{t('home.hero.title')} <span className="text-blue-200">{t('home.hero.highlight')}</span></h1>
-                <p className="mt-4 text-white/90 text-lg max-w-xl">{t('home.hero.subtitle')}</p>
-                <div className="mt-6 flex items-center gap-4">
-                  <div className="flex items-center text-white/90"><svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>Propiedades verificadas</div>
-                  <div className="flex items-center text-white/90"><svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m4 0h-1V9a2 2 0 00-2-2H9m4 0h1a2 2 0 012 2v3m-6 4h6" /></svg>Reserva segura</div>
-                </div>
-              </motion.div>
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2 }} className="mt-8 bg-white rounded-2xl shadow-2xl border border-white/20 p-3">
-                <div className="flex flex-col lg:flex-row gap-2">
-                  <div className="flex-1 px-4 py-3 rounded-xl bg-gray-50">
-                    <label className="text-xs font-bold text-gray-900">Destino</label>
-                    <select id="destino" name="destino" value={filters.search} onChange={(e) => handleFilterChange('search', e.target.value)} className="w-full text-sm font-medium bg-transparent border-none outline-none">
-                      <option value="">Explora destinos</option>
-                      <option value="Cali">Cali</option>
-                    </select>
-                  </div>
-                  <div className="flex-1 px-4 py-3 rounded-xl bg-gray-50">
-                    <label className="text-xs font-bold text-gray-900">Habitaciones</label>
-                    <select id="habitaciones" name="habitaciones" value={filters.bedrooms || ''} onChange={(e) => handleFilterChange('bedrooms', e.target.value ? parseInt(e.target.value) : undefined)} className="w-full text-sm font-medium bg-transparent border-none outline-none">
-                      <option value="">¿Cuántas?</option>
-                      <option value="1">1</option>
-                      <option value="2">2</option>
-                      <option value="3">3+</option>
-                    </select>
-                  </div>
-                  <div className="flex-1 px-4 py-3 rounded-xl bg-gray-50">
-                    <label className="text-xs font-bold text-gray-900">Presupuesto</label>
-                    <select id="presupuesto" name="presupuesto" value={filters.min_price === 2800000 && filters.max_price === 3600000 ? '2800000-3600000' : filters.min_price === 4000000 ? '4000000+' : ''} onChange={(e) => { const value = e.target.value; if (value === '2800000-3600000') { handleFilterChange('min_price', 2800000); handleFilterChange('max_price', 3600000); } else if (value === '4000000+') { handleFilterChange('min_price', 4000000); handleFilterChange('max_price', undefined); } else { handleFilterChange('min_price', undefined); handleFilterChange('max_price', undefined); } }} className="w-full text-sm font-medium bg-transparent border-none outline-none">
-                      <option value="">¿Cuánto?</option>
-                      <option value="2800000-3600000">$2.8M - $3.6M</option>
-                      <option value="4000000+">$4.0M+</option>
-                    </select>
-                  </div>
-                  <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }} onClick={() => { const s = document.querySelector('[data-results-section]'); if (s) s.scrollIntoView({ behavior: 'smooth' }); }} className="w-full lg:w-auto px-6 py-3 rounded-xl bg-blue-600 text-white font-semibold">Buscar</motion.button>
-                </div>
-              </motion.div>
+      <div className="relative w-full h-[90vh] min-h-[600px] flex flex-col justify-center items-center text-center px-4 sm:px-6 lg:px-8 pt-32 pb-12 overflow-hidden">
+        {/* Background Image with Parallax Effect */}
+        <div className="absolute inset-0 z-0">
+          <Image
+            src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=2070&auto=format&fit=crop"
+            alt="Luxury Stay in Cali"
+            fill
+            className="object-cover brightness-[0.4]"
+            priority
+          />
+        </div>
+
+        <div className="relative z-10 max-w-5xl mx-auto flex flex-col items-center">
+          
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }} 
+            animate={{ opacity: 1, y: 0 }} 
+            transition={{ duration: 0.8 }}
+            className="flex flex-col items-center"
+          >
+            <div className="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-white/10 border border-white/20 text-white text-sm font-semibold mb-8 backdrop-blur-md shadow-lg">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+              </span>
+              #1 en Alojamientos Corporativos en Cali
             </div>
-            <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8 }} className="hidden lg:block">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="relative h-56 rounded-2xl overflow-hidden shadow-xl"><Image src="/zona-default.jpg" alt="Alojamiento 1" fill className="object-cover" /></div>
-                <div className="relative h-56 rounded-2xl overflow-hidden shadow-xl"><Image src="/zona-default.jpg" alt="Alojamiento 2" fill className="object-cover" /></div>
-                <div className="relative h-56 rounded-2xl overflow-hidden shadow-xl col-span-2"><Image src="/zona-default.jpg" alt="Alojamiento 3" fill className="object-cover" /></div>
+            
+            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-white leading-tight mb-8 tracking-tight">
+              {t('home.hero.title')} <br className="hidden sm:block" />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-cyan-300">
+                {t('home.hero.highlight')}
+              </span>
+            </h1>
+            
+            <p className="text-xl sm:text-2xl text-gray-200 mb-12 max-w-3xl leading-relaxed font-light">
+              {t('home.hero.subtitle')}
+            </p>
+
+            {/* Search Bar - Centered & Clean */}
+            <div className="w-full max-w-4xl bg-white rounded-full p-2 shadow-2xl flex flex-col sm:flex-row items-center gap-2 border border-gray-100">
+              
+              {/* Destino */}
+              <div className="w-full sm:flex-1 px-6 py-3 border-b sm:border-b-0 sm:border-r border-gray-100 relative group text-left">
+                <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Destino</label>
+                <div className="flex items-center">
+                  <FaSearch className="text-gray-400 mr-3" />
+                  <select 
+                    id="destino" 
+                    name="destino" 
+                    value={filters.search} 
+                    onChange={(e) => handleFilterChange('search', e.target.value)} 
+                    className="w-full bg-transparent font-bold text-gray-900 outline-none cursor-pointer appearance-none text-base truncate"
+                  >
+                    <option value="">Cali, Colombia</option>
+                    <option value="Cali">Cali - Zona Sur</option>
+                    <option value="Cali">Cali - Zona Oeste</option>
+                  </select>
+                </div>
               </div>
-            </motion.div>
-          </div>
+
+              {/* Habitaciones */}
+              <div className="w-full sm:flex-1 px-6 py-3 border-b sm:border-b-0 sm:border-r border-gray-100 relative group text-left">
+                <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Espacio</label>
+                <select 
+                  id="habitaciones" 
+                  name="habitaciones" 
+                  value={filters.bedrooms || ''} 
+                  onChange={(e) => handleFilterChange('bedrooms', e.target.value ? parseInt(e.target.value) : undefined)} 
+                  className="w-full bg-transparent font-bold text-gray-900 outline-none cursor-pointer appearance-none text-base"
+                >
+                  <option value="">Cualquier tamaño</option>
+                  <option value="1">1 Habitación</option>
+                  <option value="2">2 Habitaciones</option>
+                  <option value="3">3+ Habitaciones</option>
+                </select>
+              </div>
+
+              {/* Presupuesto */}
+              <div className="w-full sm:flex-1 px-6 py-3 relative group text-left">
+                <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Presupuesto</label>
+                <select 
+                  id="presupuesto" 
+                  name="presupuesto" 
+                  value={filters.min_price === 2800000 && filters.max_price === 3600000 ? '2800000-3600000' : filters.min_price === 4000000 ? '4000000+' : ''} 
+                  onChange={(e) => { const value = e.target.value; if (value === '2800000-3600000') { handleFilterChange('min_price', 2800000); handleFilterChange('max_price', 3600000); } else if (value === '4000000+') { handleFilterChange('min_price', 4000000); handleFilterChange('max_price', undefined); } else { handleFilterChange('min_price', undefined); handleFilterChange('max_price', undefined); } }} 
+                  className="w-full bg-transparent font-bold text-gray-900 outline-none cursor-pointer appearance-none text-base"
+                >
+                  <option value="">Cualquier precio</option>
+                  <option value="2800000-3600000">$2.8M - $3.6M</option>
+                  <option value="4000000+">$4.0M+</option>
+                </select>
+              </div>
+
+              <motion.button 
+                whileHover={{ scale: 1.05 }} 
+                whileTap={{ scale: 0.95 }} 
+                onClick={() => { const s = document.querySelector('[data-results-section]'); if (s) s.scrollIntoView({ behavior: 'smooth' }); }} 
+                className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-bold p-4 rounded-full transition-all shadow-lg flex items-center justify-center gap-2 min-w-[60px]"
+              >
+                <FaSearch className="text-xl" />
+                <span className="sm:hidden">Buscar</span>
+              </motion.button>
+            </div>
+            
+            {/* Trust Indicators */}
+            <div className="mt-12 flex flex-wrap justify-center gap-4 sm:gap-8 text-sm font-medium text-white/80">
+              <div className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-full backdrop-blur-sm">
+                <FaCheckCircle className="text-green-400" /> Propiedades Verificadas
+              </div>
+              <div className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-full backdrop-blur-sm">
+                <FaShieldAlt className="text-blue-400" /> Pagos 100% Seguros
+              </div>
+              <div className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-full backdrop-blur-sm">
+                <FaStar className="text-yellow-400" /> Calificación 4.9/5
+              </div>
+            </div>
+
+          </motion.div>
         </div>
       </div>
 
@@ -1242,7 +651,7 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="bg-white">
+      <div className="">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-bold text-gray-900">Explora destinos</h2>
@@ -1570,11 +979,11 @@ export default function Home() {
 
             {/* Propiedades en ambas vistas */}
             {viewMode === 'list' ? (
-              <div className="space-y-8">
+              <div className="space-y-6">
                 {sortedProperties.map((property) => (
                   <PropertyListItem
                     key={property.id_property}
-                    property={property}
+                    property={toDestProperty(property)}
                     isFavorite={favorites.has(property.id_property)}
                     onToggleFavorite={() =>
                       toggleFavorite(property.id_property)
@@ -1587,7 +996,7 @@ export default function Home() {
                 {sortedProperties.map((property) => (
                   <PropertyCard
                     key={property.id_property}
-                    property={property}
+                    property={toDestProperty(property)}
                     isFavorite={favorites.has(property.id_property)}
                     onToggleFavorite={() =>
                       toggleFavorite(property.id_property)
@@ -1618,142 +1027,92 @@ export default function Home() {
         <TrustedBy />
       </Suspense>
 
-      {/* Inspired Section Rediseñada */}
-      <div className="bg-gradient-to-br from-gray-50 to-blue-50 py-20">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
-              ¿No encuentras lo que buscas?
-            </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Nuestro equipo de expertos está aquí para ayudarte a encontrar el
-              hogar perfecto. Contáctanos y encuentra exactamente lo que
-              necesitas.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-            {/* Feature 1 */}
-            <div className="text-center p-8 bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300">
-              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <svg
-                  className="w-8 h-8 text-blue-600"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                  />
-                </svg>
+      {/* Concierge Section - Diseño Moderno y Humano */}
+      <div className="relative py-24 bg-blue-500 overflow-hidden">
+        {/* Decorative Background Elements */}
+        <div className="absolute top-0 right-0 -mr-20 -mt-20 w-[500px] h-[500px] bg-white/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-[500px] h-[500px] bg-blue-600/20 rounded-full blur-3xl pointer-events-none" />
+        
+        <div className="max-w-7xl mx-auto px-6 relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            
+            {/* Left Content */}
+            <div className="text-left">
+              <div className="inline-flex items-center px-4 py-2 bg-white/10 border border-white/20 rounded-full text-white text-sm font-semibold mb-6">
+                <span className="w-2 h-2 bg-white rounded-full mr-2 animate-pulse"></span>
+                Servicio Concierge
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                Búsqueda personalizada
-              </h3>
-              <p className="text-gray-600">
-                Te ayudamos a encontrar exactamente lo que necesitas según tus
-                preferencias y presupuesto
+              
+              <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
+                ¿Buscas algo <span className="text-blue-100">único?</span>
+              </h2>
+              
+              <p className="text-lg text-blue-50 mb-8 leading-relaxed max-w-xl">
+                Sabemos que encontrar el alojamiento perfecto puede ser agotador. Deja que nuestro equipo de expertos haga el trabajo pesado por ti. Cuéntanos qué necesitas y te presentaremos opciones seleccionadas que se ajusten a tu estilo.
               </p>
+
+              <div className="flex flex-col sm:flex-row gap-4">
+                <a
+                  href={whatsappLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center px-8 py-4 bg-white text-blue-600 font-bold rounded-xl hover:bg-blue-50 transition-all duration-300 hover:scale-105 shadow-lg"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    return trackWhatsAppConversion(whatsappLink);
+                  }}
+                >
+                  <svg className="w-5 h-5 mr-3 text-green-500" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.890-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.488" />
+                  </svg>
+                  Iniciar Chat
+                </a>
+                
+                <a
+                  href="tel:+573017546634"
+                  className="inline-flex items-center justify-center px-8 py-4 bg-transparent border border-white/30 text-white font-semibold rounded-xl hover:bg-white/10 transition-all duration-200"
+                >
+                  Llamar
+                </a>
+              </div>
             </div>
 
-            {/* Feature 2 */}
-            <div className="text-center p-8 bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300">
-              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <svg
-                  className="w-8 h-8 text-green-600"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
+            {/* Right Features */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* Feature Card 1 */}
+              <div className="bg-white/10 backdrop-blur-sm p-6 rounded-2xl border border-white/20 hover:bg-white/20 transition-colors duration-300">
+                <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mb-4 text-white">
+                  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                </div>
+                <h3 className="text-white font-semibold text-lg mb-2">Búsqueda Dedicada</h3>
+                <p className="text-blue-100 text-sm">Rastreamos el mercado para encontrar joyas ocultas que no están en la web.</p>
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                Propiedades verificadas
-              </h3>
-              <p className="text-gray-600">
-                Todas nuestras propiedades están verificadas, actualizadas y
-                listas para habitar
-              </p>
-            </div>
 
-            {/* Feature 3 */}
-            <div className="text-center p-8 bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300">
-              <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <svg
-                  className="w-8 h-8 text-purple-600"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-                  />
-                </svg>
+              {/* Feature Card 2 */}
+              <div className="bg-white/10 backdrop-blur-sm p-6 rounded-2xl border border-white/20 hover:bg-white/20 transition-colors duration-300">
+                <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mb-4 text-white">
+                   <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <h3 className="text-white font-semibold text-lg mb-2">Verificación Total</h3>
+                <p className="text-blue-100 text-sm">Cada propiedad es inspeccionada personalmente para garantizar calidad.</p>
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                Atención personalizada
-              </h3>
-              <p className="text-gray-600">
-                Acompañamiento completo en todo el proceso, desde la búsqueda
-                hasta la entrega
-              </p>
-            </div>
-          </div>
 
-          {/* CTA Buttons Mejorados */}
-          <div className="text-center">
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a
-                href="tel:+573017546634"
-                className="inline-flex items-center px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105"
-              >
-                <svg
-                  className="w-5 h-5 mr-3"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-                  />
-                </svg>
-                Llamar ahora
-              </a>
-
-              <a
-                href={whatsappLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center px-8 py-4 bg-white border-2 border-blue-600 text-blue-600 font-semibold rounded-xl hover:bg-blue-50 transition-all duration-200 hover:scale-105"
-                onClick={(e) => {
-                  e.preventDefault();
-                  return trackWhatsAppConversion(whatsappLink);
-                }}
-              >
-                <svg
-                  className="w-5 h-5 mr-3"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.890-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.488" />
-                </svg>
-                WhatsApp
-              </a>
+              {/* Feature Card 3 - Spanning full width on mobile, auto on grid */}
+              <div className="sm:col-span-2 bg-white/10 backdrop-blur-sm p-6 rounded-2xl border border-white/20 flex items-center gap-4">
+                <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center flex-shrink-0 text-white">
+                  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="text-white font-semibold text-lg">Ahorra Tiempo</h3>
+                  <p className="text-blue-100 text-sm">Recibe una lista curada en menos de 24 horas.</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>

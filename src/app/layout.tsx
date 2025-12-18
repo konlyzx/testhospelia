@@ -161,7 +161,7 @@ export default function RootLayout({
           data-key="+KTC6G4Kj1NHAuKA/N3UtA"
         />
       </head>
-      <body className="antialiased">
+      <body className="antialiased" suppressHydrationWarning={true}>
         {/* Google Tag Manager */}
         <Script
           id="gtm"

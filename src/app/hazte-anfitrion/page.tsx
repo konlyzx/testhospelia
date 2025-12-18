@@ -105,9 +105,9 @@ export default function HazteAnfitrion() {
     <div className="min-h-screen bg-white text-gray-800">
       <Header />
       
-      <section className="relative pt-24 sm:pt-20 lg:pt-24 pb-8 sm:pb-12 lg:pb-16 hero-gradient">
-        <div className="container mx-auto px-4 flex flex-col md:flex-row items-center">
-          <div className="md:w-1/2 text-center md:text-left mb-10 md:mb-0">
+      <section className="relative min-h-[80vh] flex items-center pt-24 pb-12 hero-gradient">
+        <div className="w-full max-w-7xl mx-auto px-6 md:px-12 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+          <div className="text-center md:text-left">
             <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight text-white">
               Rentar tu alojamiento en Cali con Hospelia es fácil y seguro. Más clientes, más ganancias y sin complicaciones.
             </h1>
@@ -121,11 +121,11 @@ export default function HazteAnfitrion() {
               ¡Registra tu Alojamiento Ahora!
             </button>
           </div>
-          <div className="md:w-1/2 flex justify-center">
+          <div className="relative w-full flex justify-center">
             <img 
               src="/img/Banners-home-2.webp"
               alt="Anfitriones Hospelia" 
-              className=""
+              className="relative w-full max-w-lg mx-auto object-contain"
             />
           </div>
         </div>

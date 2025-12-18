@@ -2,7 +2,7 @@ import { wasiService } from '@/services/wasi'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import VisitCounter from '@/app/components/VisitCounter'
-import DestinosControls from './Controls'
+import PaginationControls from '@/app/components/ui/PaginationControls'
 import Header from '@/app/components/Header'
 import Footer from '@/app/components/Footer'
 
@@ -72,7 +72,9 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   return { title, description: `Explora propiedades en ${title}`, alternates: { canonical: url } }
 }
 
-export default async function DestinoSlugPage({ params, searchParams }: { params: { slug: string }, searchParams?: { page?: string, order?: string } }) {
+export default async function DestinoSlugPage(props: { params: Promise<{ slug: string }>, searchParams: Promise<{ page?: string, order?: string }> }) {
+  const params = await props.params;
+  const searchParams = await props.searchParams;
   const page = parseInt(String(searchParams?.page || '1'), 10) || 1
   const take = 12
   const skip = (page - 1) * take
@@ -85,8 +87,8 @@ export default async function DestinoSlugPage({ params, searchParams }: { params
   return (
     <div className="bg-white min-h-screen">
       <Header />
-      <section className="bg-gradient-to-br from-blue-600 via-blue-500 to-indigo-600 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 sm:pt-32 lg:pt-36 pb-12">
+      <section className="bg-gradient-to-br from-blue-600 via-blue-500 to-indigo-600 text-white min-h-[80vh] flex items-center relative">
+        <div className="w-full max-w-7xl mx-auto px-6 md:px-12 pt-24 pb-12">
           <h1 className="text-3xl sm:text-4xl font-extrabold">Destinos: {q}</h1>
           <p className="mt-2 text-white/90">Explora propiedades en {q} con filtros y ordenamientos.</p>
         </div>
@@ -95,7 +97,7 @@ export default async function DestinoSlugPage({ params, searchParams }: { params
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-xl font-bold text-gray-900">Resultados</h2>
         </div>
-        <DestinosControls page={page} hasNext={items.length >= take} order={order} basePath={`/destinos/${params.slug}`} />
+        <PaginationControls page={page} hasNext={items.length >= take} order={order} basePath={`/destinos/${params.slug}`} />
         {items.length === 0 ? (
           <div className="text-gray-600">No hay propiedades para este destino.</div>
         ) : (
@@ -132,7 +134,7 @@ export default async function DestinoSlugPage({ params, searchParams }: { params
             ))}
           </div>
         )}
-        <DestinosControls page={page} hasNext={items.length >= take} order={order} basePath={`/destinos/${params.slug}`} />
+        <PaginationControls page={page} hasNext={items.length >= take} order={order} basePath={`/destinos/${params.slug}`} />
       </div>
       <Footer />
     </div>

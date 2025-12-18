@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { wasiService } from '@/services/wasi'
 
-export const dynamic = 'force-static'
-export const revalidate = 300
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
 
 function slugToQuery(slug: string) {
   const mapping: Record<string, string> = {

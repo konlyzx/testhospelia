@@ -2,8 +2,10 @@ import { wasiService } from '@/services/wasi';
 import { notFound } from 'next/navigation';
 import PropertyView from './PropertyView'; 
 import type { Metadata } from 'next';
+import Script from 'next/script';
+
 export const dynamic = 'force-static'
-export const dynamicParams = false
+export const dynamicParams = true // Changed to true to allow new properties to be found
 
 async function getPropertyData(slug: string) {
   // const wasiService = new WasiService(); // Ya no es necesario, importamos la instancia
@@ -23,14 +25,54 @@ async function getPropertyData(slug: string) {
   }
 }
 
-export default async function PropertyDetailPage({ params }: { params: { slug: string } }) {
+export default async function PropertyDetailPage(props: { params: Promise<{ slug: string }> }) {
+  const params = await props.params;
   const property = await getPropertyData(params.slug);
 
   if (!property) {
     notFound();
   }
 
-  return <PropertyView property={property} />;
+  // Schema.org Structured Data
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': ['RealEstateListing', 'Accommodation'],
+    name: property.title,
+    description: property.observations || `Propiedad en ${property.city_label}`,
+    image: property.main_image?.url,
+    url: `https://hospelia.co/propiedad/${params.slug}`,
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: property.address,
+      addressLocality: property.city_label,
+      addressRegion: property.region_label,
+      addressCountry: 'CO'
+    },
+    geo: property.latitude && property.longitude ? {
+      '@type': 'GeoCoordinates',
+      latitude: property.latitude,
+      longitude: property.longitude
+    } : undefined,
+    numberOfRooms: property.bedrooms ? parseInt(property.bedrooms) : undefined,
+    floorSize: property.area ? {
+      '@type': 'QuantitativeValue',
+      value: property.area,
+      unitCode: 'MTK'
+    } : undefined,
+    price: property.rent_price || property.sale_price,
+    priceCurrency: property.iso_currency || 'COP',
+  };
+
+  return (
+    <>
+      <Script
+        id="property-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <PropertyView property={property} />
+    </>
+  );
 }
 
 export async function generateStaticParams() {
