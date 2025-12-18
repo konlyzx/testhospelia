@@ -1,4 +1,4 @@
-# 🏠 Hospelia - Plataforma de Alojamientos con IA
+# 🏠 Hospelia - Plataforma de Alojamientos 
 
 > **Encuentra tu hogar perfecto con tecnología de vanguardia**
 
@@ -208,5 +208,6 @@ En desarrollo, aparece un indicador visual que muestra:
 4. **Control Manual**: Posibilidad de forzar actualizaciones cuando sea necesario
 
 ---
-
+Fix Shell
+---
 **Hospelia** - Transformando el turismo en Colombia 🇨🇴
