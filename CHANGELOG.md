@@ -202,9 +202,11 @@ getTimeUntilNextBlogRefresh() // Tiempo hasta próxima actualización
 
 ---
 
-**Fecha de implementación:** ${new Date().toLocaleDateString('es-CO')}
-**Versión:** 2.0 - Optimizada
-**Estado:** ✅ Completado 
+<p>
+  <strong>Fecha de implementación:</strong> {new Date().toLocaleDateString('es-CO')} 
+  <strong>Versión:</strong> 2.0 - Optimizada 
+  <strong>Estado:</strong> ✅ Completado
+</p>
 
 ![Deploy Status](https://img.shields.io/badge/Deploy-Vercel-black?style=flat&logo=vercel)
 
@@ -212,7 +214,7 @@ getTimeUntilNextBlogRefresh() // Tiempo hasta próxima actualización
 
 [https://hospelia.co/](https://hospelia.co/)
 
-![Astro](https://img.shields.io/badge/Astro-FF5D01?logo=astro&logoColor=white)
+![Next.js](https://img.shields.io/badge/Next.js-black?logo=next.js&logoColor=white)
 ![Tailwind](https://img.shields.io/badge/Tailwind_CSS-38B2AC?logo=tailwind-css&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)
 ![Figma](https://img.shields.io/badge/Figma-F24E1E?logo=figma&logoColor=white)
