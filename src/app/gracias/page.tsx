@@ -136,6 +136,21 @@ export default function GraciasPage() {
 
       </div>
 
+      {/* Google Ads Conversion Script */}
+      <Script id="google-ads-conversion" strategy="afterInteractive">
+        {`
+          const urlParams = new URLSearchParams(window.location.search);
+          const conversionValue = parseFloat(urlParams.get('value')) || 1.0;
+          const conversionCurrency = urlParams.get('currency') || 'COP';
+
+          gtag('event', 'conversion', {
+              'send_to': 'AW-943201081/dpzsCNDA3YcaELm24MED',
+              'value': conversionValue,
+              'currency': conversionCurrency
+          });
+        `}
+      </Script>
+
       <Script id="ga-thankyou" strategy="afterInteractive" dangerouslySetInnerHTML={{ __html: `
         if (window && window.gtag) {
           window.gtag('event', 'page_view', {

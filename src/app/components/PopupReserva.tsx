@@ -460,7 +460,23 @@ Soy ${formData.nombre} y estoy interesado/a en alquilar un apartamento amoblado 
           window.gtag('event', 'whatsapp_click', { event_category: 'engagement', event_label: 'post_conversion_whatsapp', conversion_id: conversionId, popup_id: popupId, ...utmParams });
         }
         try { window.open(whatsappUrl, '_blank'); } catch {}
-        const sp = new URLSearchParams({ conv: conversionId, popup: String(popupId || ''), ...(utmParams as any) });
+        
+        // Calcular valor numérico del presupuesto para Google Ads
+        let budgetValue = 1.0;
+        if (formData.presupuesto.includes('-')) {
+          const parts = formData.presupuesto.split('-').map(p => parseFloat(p.replace(/\./g, '').trim()));
+          if (parts.length === 2) budgetValue = (parts[0] + parts[1]) / 2;
+        } else if (formData.presupuesto.includes('+')) {
+          budgetValue = parseFloat(formData.presupuesto.replace(/[^\d]/g, ''));
+        }
+
+        const sp = new URLSearchParams({ 
+          conv: conversionId, 
+          popup: String(popupId || ''), 
+          value: budgetValue.toString(),
+          currency: 'COP',
+          ...(utmParams as any) 
+        });
         router.push(`/gracias?${sp.toString()}`);
       } else {
         throw new Error(`Errores: ${errors.join(', ')}`);
