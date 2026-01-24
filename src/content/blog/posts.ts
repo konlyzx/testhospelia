@@ -13,6 +13,220 @@ export type BlogPost = {
 
 export const posts: BlogPost[] = [
   {
+    slug: 'predicciones-viaje-2026-hospedaje-colombia',
+    title: 'Predicciones de Viaje 2026: Cómo cambiará el hospedaje en Colombia',
+    category: 'tendencias',
+    date: '2026-01-24',
+    excerpt: 'Las predicciones de viaje para 2026 revelan cómo el alquiler de apartamentos amoblados en Colombia superará a hoteles tradicionales. Análisis, comparativas y recomendaciones.',
+    cover: 'https://images.unsplash.com/photo-1573152143286-0c422b4d2175?q=80&w=2670&auto=format&fit=crop',
+    coverAlt: 'Vista panorámica de ciudad colombiana desde un apartamento amoblado moderno',
+    tags: ['predicciones de viaje 2026', 'apartamentos amoblados Colombia', 'tendencias turismo 2026', 'nómadas digitales'],
+    featured: true,
+    content: `
+    <div class="space-y-8 text-gray-800 leading-relaxed">
+      <p class="text-xl md:text-2xl font-light text-gray-600 border-l-4 border-blue-500 pl-4 italic">
+        "En 2026, viajar ya no se trata solo de dormir en un lugar. Los viajeros buscan flexibilidad, experiencias auténticas y espacios que se adapten a su ritmo."
+      </p>
+
+      <p>
+        La industria del turismo en Colombia está atravesando su transformación más profunda en décadas. Lo que antes era una elección binaria entre "hotel de lujo" o "hostal económico" se ha fragmentado en un abanico de opciones donde la <strong>experiencia de vida</strong> prima sobre el servicio de habitación.
+      </p>
+      
+      <p>
+        Para el año 2026, las predicciones son claras: la línea entre "viajar" y "vivir" se borrará. Los nómadas digitales, las familias en "workations" y los turistas médicos no buscan un lobby con recepcionista; buscan una cocina equipada, internet de alta velocidad y la sensación de llegar a su propio hogar en Cali o Medellín. En este contexto, <a href="/" class="text-blue-600 hover:text-blue-800 font-bold underline decoration-2 decoration-blue-200 hover:decoration-blue-600 transition-all">Hospelia.co</a> se posiciona no solo como una plataforma, sino como el estándar de calidad para esta nueva era.
+      </p>
+
+      <h3 class="text-2xl md:text-3xl font-bold text-gray-900 mt-10 mb-6 flex items-center">
+        <span class="bg-blue-100 text-blue-600 rounded-full w-10 h-10 flex items-center justify-center mr-3 text-lg">1</span>
+        Tendencia Global: El fin de las reservas rígidas
+      </h3>
+      
+      <p>
+        Las búsquedas de viajes de último minuto y las estancias de duración indefinida han crecido un <strong>40% interanual</strong>. El viajero de 2026 prioriza la espontaneidad. Ya no se planifican vacaciones de 15 días exactos con seis meses de antelación. Ahora, vemos:
+      </p>
+      
+      <ul class="list-disc pl-6 space-y-2 marker:text-blue-500">
+        <li><strong>Micro-escapadas:</strong> Fines de semana largos decididos el miércoles anterior.</li>
+        <li><strong>Estancias Híbridas:</strong> Ejecutivos que extienden su viaje de negocios por dos semanas para trabajar remotamente.</li>
+        <li><strong>Turismo Lento (Slow Travel):</strong> Viajeros que se quedan 1 o 2 meses en una ciudad para absorber realmente su cultura.</li>
+      </ul>
+
+      <p class="mb-8">
+        Esto favorece enormemente a los alojamientos flexibles. Un hotel tradicional, con sus tarifas rígidas y falta de cocina, simplemente no puede competir con un apartamento amoblado cuando la estancia supera las 4 noches.
+      </p>
+
+      <div class="my-10 overflow-hidden border border-gray-200 rounded-xl shadow-lg bg-white">
+        <h3 class="text-xl font-bold bg-gray-50 p-4 border-b border-gray-200">
+          <span class="bg-blue-100 text-blue-600 rounded-lg px-2 py-1 text-sm mr-2">Comparativa</span>
+          Hotel vs Airbnb vs Hospelia
+        </h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-gradient-to-r from-gray-800 to-gray-900 text-white">
+                <th class="p-4 font-semibold text-sm uppercase tracking-wider">Factor</th>
+                <th class="p-4 font-semibold text-sm uppercase tracking-wider">Hotel Tradicional</th>
+                <th class="p-4 font-semibold text-sm uppercase tracking-wider">Airbnb Genérico</th>
+                <th class="p-4 font-semibold text-sm uppercase tracking-wider bg-blue-600">Experiencia Hospelia</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+              <tr class="hover:bg-gray-50 transition-colors">
+                <td class="p-4 font-medium text-gray-900">Flexibilidad de fechas</td>
+                <td class="p-4 text-gray-600">Baja (Check-in estricto)</td>
+                <td class="p-4 text-gray-600">Media</td>
+                <td class="p-4 text-blue-700 font-semibold bg-blue-50/30">Alta y personalizada</td>
+              </tr>
+              <tr class="hover:bg-gray-50 transition-colors">
+                <td class="p-4 font-medium text-gray-900">Espacio y privacidad</td>
+                <td class="p-4 text-gray-600">Limitado (Solo habitación)</td>
+                <td class="p-4 text-gray-600">Variable (Sorpresas)</td>
+                <td class="p-4 text-blue-700 font-semibold bg-blue-50/30">Amplio y 100% verificado</td>
+              </tr>
+              <tr class="hover:bg-gray-50 transition-colors">
+                <td class="p-4 font-medium text-gray-900">Ideal estancias largas</td>
+                <td class="p-4 text-gray-600">No (Costoso e incómodo)</td>
+                <td class="p-4 text-gray-600">A veces</td>
+                <td class="p-4 text-blue-700 font-semibold bg-blue-50/30">Sí (Diseñado para vivir)</td>
+              </tr>
+              <tr class="hover:bg-gray-50 transition-colors">
+                <td class="p-4 font-medium text-gray-900">Soporte al cliente</td>
+                <td class="p-4 text-gray-600">Recepción física</td>
+                <td class="p-4 text-gray-600">Limitado (Solo chat)</td>
+                <td class="p-4 text-blue-700 font-semibold bg-blue-50/30">Agentes locales 24/7</td>
+              </tr>
+              <tr class="hover:bg-gray-50 transition-colors">
+                <td class="p-4 font-medium text-gray-900">Confiabilidad</td>
+                <td class="p-4 text-gray-600">Alta</td>
+                <td class="p-4 text-gray-600">Variable</td>
+                <td class="p-4 text-blue-700 font-semibold bg-blue-50/30">Garantizada (Propiedades Premium)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <h3 class="text-2xl md:text-3xl font-bold text-gray-900 mt-12 mb-6 flex items-center">
+        <span class="bg-blue-100 text-blue-600 rounded-full w-10 h-10 flex items-center justify-center mr-3 text-lg">3</span>
+        Colombia en el radar global 2026
+      </h3>
+      
+      <p>
+        Colombia no es una moda pasajera; es un destino que ha madurado. Ciudades como <strong>Medellín, Bogotá, Cali y Cartagena</strong> ofrecen una infraestructura que rivaliza con grandes capitales, pero a un costo de vida significativamente menor.
+      </p>
+      
+      <div class="grid md:grid-cols-2 gap-6 my-8">
+        <div class="bg-gray-50 p-6 rounded-xl border border-gray-100">
+          <h4 class="font-bold text-gray-900 mb-2 text-lg">🇨🇴 Para el Nómada Digital</h4>
+          <p class="text-sm text-gray-600">Con la nueva visa de nómada digital, el país espera recibir más de 100,000 trabajadores remotos en 2026. Hospelia atiende esta demanda con apartamentos que garantizan <strong>zonas de trabajo ergonómicas y fibra óptica</strong>.</p>
+        </div>
+        <div class="bg-gray-50 p-6 rounded-xl border border-gray-100">
+          <h4 class="font-bold text-gray-900 mb-2 text-lg">🏥 Para el Turismo Médico</h4>
+          <p class="text-sm text-gray-600">Cali sigue liderando en cirugía estética y odontología. Estos pacientes requieren recuperación en ambientes privados, tranquilos y accesibles (sin escaleras, baños adaptados), algo que los hoteles estándar no siempre ofrecen.</p>
+        </div>
+      </div>
+
+      <h3 class="text-2xl md:text-3xl font-bold text-gray-900 mt-12 mb-6">
+        Recomendaciones estratégicas
+      </h3>
+      
+      <p class="mb-6">Si planeas visitar Colombia en 2026, tu elección de alojamiento definirá el éxito de tu viaje. Hemos categorizado las mejores opciones según tu perfil:</p>
+
+      <div class="my-8 overflow-hidden border border-gray-200 rounded-xl shadow-md bg-white">
+         <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-blue-50 text-blue-900">
+                <th class="p-4 font-bold border-b border-blue-100">Tipo de viajero</th>
+                <th class="p-4 font-bold border-b border-blue-100">Prioridad Principal</th>
+                <th class="p-4 font-bold border-b border-blue-100">Nuestra Recomendación</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+              <tr>
+                <td class="p-4 font-semibold text-gray-800">Turista Internacional</td>
+                <td class="p-4 text-gray-600">Seguridad y Experiencia Local</td>
+                <td class="p-4 text-blue-600 font-medium">Apartamento en zona gastronómica (Granada, El Peñón)</td>
+              </tr>
+              <tr>
+                <td class="p-4 font-semibold text-gray-800">Nómada Digital</td>
+                <td class="p-4 text-gray-600">Conectividad y Comunidad</td>
+                <td class="p-4 text-blue-600 font-medium">Loft moderno con coworking cercano</td>
+              </tr>
+              <tr>
+                <td class="p-4 font-semibold text-gray-800">Viaje Corporativo</td>
+                <td class="p-4 text-gray-600">Eficiencia y Facturación</td>
+                <td class="p-4 text-blue-600 font-medium">Apartamentos Corporativos Hospelia (Sur de Cali)</td>
+              </tr>
+              <tr>
+                <td class="p-4 font-semibold text-gray-800">Familias</td>
+                <td class="p-4 text-gray-600">Cocina y Lavandería</td>
+                <td class="p-4 text-blue-600 font-medium">Apartamento de 3 habitaciones en conjunto cerrado</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <h3 class="text-2xl md:text-3xl font-bold text-gray-900 mt-10 mb-6 flex items-center">
+        <span class="bg-blue-100 text-blue-600 rounded-full w-10 h-10 flex items-center justify-center mr-3 text-lg">5</span>
+        ¿Por qué Hospelia es el futuro?
+      </h3>
+      
+      <p>
+        A diferencia de los marketplaces masivos donde cualquiera puede subir una propiedad, <strong>Hospelia cura su portafolio</strong>. Entendemos que en 2026, el lujo no es necesariamente el mármol en el piso, sino la certeza de que el internet funciona, las sábanas están impecables y hay alguien a quien llamar si necesitas ayuda.
+      </p>
+
+      <div class="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-2xl p-8 text-center text-white mt-12 shadow-2xl relative overflow-hidden group">
+        <div class="absolute inset-0 bg-white/10 transform -skew-y-3 group-hover:skew-y-0 transition-transform duration-700"></div>
+        <h3 class="text-3xl font-bold mb-4 relative z-10">¿Listo para vivir la experiencia 2026 hoy?</h3>
+        <p class="text-blue-100 mb-8 max-w-xl mx-auto text-lg relative z-10">No esperes al futuro. Descubre nuestra colección exclusiva de apartamentos amoblados en las mejores zonas de Colombia.</p>
+        <a href="/" class="relative z-10 inline-block bg-white text-blue-700 font-bold py-3 px-8 rounded-full shadow-lg hover:shadow-xl hover:bg-blue-50 transform hover:-translate-y-1 transition-all duration-300">
+          Explorar Apartamentos
+        </a>
+      </div>
+    </div>`
+  },
+  {
+    slug: 'inversion-alquiler-apartamentos-amoblados-colombia',
+    title: 'Inversión y Alquiler de Apartamentos Amoblados en Colombia: Guía 2025',
+    category: 'inversion',
+    date: '2026-01-24',
+    excerpt: 'Descubre cómo el mercado de apartamentos amoblados en Colombia está transformando las inversiones inmobiliarias. Guía para propietarios y viajeros.',
+    cover: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=1920&h=1080&fit=crop',
+    coverAlt: 'Apartamento amoblado de lujo con vista a la ciudad',
+    tags: ['inversion', 'bienes raices', 'renta corta', 'colombia', 'negocios'],
+    featured: true,
+    content: `<p>El mercado inmobiliario en Colombia está viviendo una revolución impulsada por el turismo y los nómadas digitales. La demanda de <strong>apartamentos amoblados para alquiler y venta</strong> ha crecido exponencialmente, convirtiéndose en una de las opciones de inversión más rentables del momento. En esta guía, exploramos por qué este modelo es el futuro y cómo <a href="/">Hospelia.co</a> se posiciona como tu mejor aliado.</p>
+
+<h3>El Auge de la Renta Corta en Colombia</h3>
+
+<p>Ciudades como Cali, Medellín y Bogotá se han posicionado en el radar internacional. Ya no solo se busca un hotel; los viajeros prefieren la experiencia local y la comodidad que ofrecen los <strong>apartamentos amoblados</strong>. Esto ha abierto una oportunidad de oro para propietarios que desean monetizar sus activos a través de plataformas digitales, pero con una gestión profesional.</p>
+
+<h3>Ventajas de Alquilar tu Propiedad Amoblada</h3>
+
+<ul>
+  <li><strong>Mayor Rentabilidad:</strong> La renta corta puede generar hasta un 40% más de ingresos comparado con el alquiler tradicional a largo plazo.</li>
+  <li><strong>Flexibilidad de Uso:</strong> Como propietario, puedes reservar fechas para tu uso personal o para vender el inmueble sin estar atado a contratos de años.</li>
+  <li><strong>Mantenimiento Constante:</strong> Al tener rotación de huéspedes y limpieza profesional frecuente, tu inmueble se mantiene en mejores condiciones que con un inquilino fijo descuidado.</li>
+</ul>
+
+<h3>Venta de Apartamentos Amoblados: Inversión "Llave en Mano"</h3>
+
+<p>Cada vez más inversionistas buscan comprar propiedades que ya estén generando ingresos. Vender un apartamento amoblado y con historial de reservas en plataformas es un valor agregado inmenso. En <strong>Hospelia</strong>, conectamos vendedores con inversionistas que buscan negocios listos para operar desde el día uno.</p>
+
+<h3>¿Por qué gestionar con Hospelia?</h3>
+
+<p>Administrar una propiedad a distancia o sin experiencia puede ser un dolor de cabeza. Nosotros nos encargamos de todo:</p>
+
+<ol>
+  <li><strong>Atención al Huésped 24/7:</strong> Garantizamos respuestas rápidas y soluciones efectivas para asegurar reseñas de 5 estrellas.</li>
+  <li><strong>Mantenimiento y Limpieza:</strong> Coordinamos todo para que tu apartamento siempre esté impecable.</li>
+</ol>
+
+<p>Si estás pensando en invertir en <strong>bienes raíces en Colombia</strong> o ya tienes una propiedad y quieres maximizar sus ingresos, el alquiler de apartamentos amoblados es el camino. <a href="/contacto">Contáctanos hoy en Hospelia</a> y llevemos tu inversión al siguiente nivel.</p>`
+  },
+  {
     slug: 'alojamientos-en-cali-guia-completa',
     title: 'Alojamientos en Cali: Guía completa 2025',
     category: 'guia',
@@ -118,4 +332,4 @@ export const posts: BlogPost[] = [
   }
 ]
 
-export const categories = ['guia', 'zonas', 'consejos']
+export const categories = ['guia', 'zonas', 'consejos', 'inversion', 'tendencias']
