@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
 import Link from 'next/link';
 import Header from '@/app/components/Header';
 import Footer from '@/app/components/Footer';
@@ -11,9 +10,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import type { WasiProperty } from '@/services/wasi';
 import { cleanDescription } from '@/utils/textUtils';
 import Script from 'next/script';
-import { FaCheckCircle, FaStar, FaWhatsapp, FaShare, FaHeart, FaMapMarkerAlt, FaBed, FaBath, FaRulerCombined, FaCar, FaWifi, FaTv, FaUtensils, FaTshirt, FaShieldAlt, FaClock, FaBan, FaUserFriends, FaRegHeart, FaArrowLeft } from 'react-icons/fa';
+import { FaCheckCircle, FaWhatsapp, FaShare, FaHeart, FaMapMarkerAlt, FaBed, FaBath, FaRulerCombined, FaCar, FaWifi, FaTv, FaUtensils, FaTshirt, FaShieldAlt, FaUserFriends, FaRegHeart, FaArrowLeft } from 'react-icons/fa';
 import PropertySafetyAndPolicy from '@/app/components/PropertySafetyAndPolicy';
-import PropertyTestimonials from '@/app/components/PropertyTestimonials';
 
 // Hook para manejar favoritos optimizado
 const useFavorites = () => {
@@ -174,6 +172,15 @@ export default function PropertyView({ property }: PropertyViewProps) {
     window.open(whatsappUrl, '_blank');
   };
 
+  const handleImageError = (
+    event: React.SyntheticEvent<HTMLImageElement>,
+    fallbackSrc: string
+  ) => {
+    if (!event.currentTarget.src.includes(fallbackSrc)) {
+      event.currentTarget.src = fallbackSrc;
+    }
+  };
+
   const PhotoGalleryModal = () => {
     if (!showAllPhotos) return null;
 
@@ -212,15 +219,13 @@ export default function PropertyView({ property }: PropertyViewProps) {
                 transition={{ duration: 0.3 }}
                 className="w-full h-full"
               >
-                <Image
+                <img
                   src={allImages[selectedImageIndex]?.url || '/placeholder-property.jpg'}
                   alt={property.title}
-                  width={1200}
-                  height={800}
                   className="object-contain w-full h-full"
-                  priority
-                  placeholder="blur"
-                  blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
+                  loading="eager"
+                  decoding="async"
+                  onError={(event) => handleImageError(event, '/placeholder-property.jpg')}
                 />
               </motion.div>
             </div>
@@ -258,11 +263,13 @@ export default function PropertyView({ property }: PropertyViewProps) {
                   className={`relative w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 transition-all duration-200 ${selectedImageIndex === index ? 'ring-2 ring-white' : 'opacity-70 hover:opacity-100'
                     }`}
                 >
-                  <Image
+                  <img
                     src={image.url}
                     alt={`Vista ${index + 1}`}
-                    fill
-                    className="object-cover"
+                    className="absolute inset-0 w-full h-full object-cover"
+                    loading="lazy"
+                    decoding="async"
+                    onError={(event) => handleImageError(event, '/placeholder-property.jpg')}
                   />
                 </button>
               ))}
@@ -350,13 +357,13 @@ export default function PropertyView({ property }: PropertyViewProps) {
                 className="col-span-4 sm:col-span-2 row-span-2 relative cursor-pointer group"
                 onClick={() => setShowAllPhotos(true)}
               >
-                <Image
+                <img
                   src={allImages[0]?.url || '/zona-default.jpg'}
                   alt={cleanDescription(property.title)}
-                  fill
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                  className="object-cover transition-transform duration-500 group-hover:scale-105"
-                  priority
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  loading="eager"
+                  decoding="async"
+                  onError={(event) => handleImageError(event, '/zona-default.jpg')}
                 />
                 <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-300" />
               </div>
@@ -371,12 +378,13 @@ export default function PropertyView({ property }: PropertyViewProps) {
                     setShowAllPhotos(true);
                   }}
                 >
-                  <Image
+                  <img
                     src={image.url || '/zona-default.jpg'}
                     alt={`Vista ${index + 2}`}
-                    fill
-                    sizes="25vw"
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    loading="lazy"
+                    decoding="async"
+                    onError={(event) => handleImageError(event, '/zona-default.jpg')}
                   />
                   <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-300" />
                 </div>

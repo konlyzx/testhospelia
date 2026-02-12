@@ -2,7 +2,6 @@
   
  import { useState, useEffect } from 'react'; 
  import Link from 'next/link'; 
- import Image from 'next/image'; 
  import { usePathname } from 'next/navigation'; 
  import { FaBars, FaUserCircle, FaGlobe, FaTimes, FaWhatsapp, FaTh, FaHome, FaInfoCircle, FaEnvelope } from 'react-icons/fa'; 
  import { useLanguage } from '@/contexts/LanguageContext'; 
@@ -75,12 +74,12 @@
              {/* Logo */} 
              <Link href="/" className="flex-shrink-0 flex items-center gap-2 z-50 group"> 
                <div className="relative h-10 w-32 transition-transform duration-300 group-hover:scale-105"> 
-                 <Image 
+                 <img 
                    src="/img/logo-hospelia.webp" 
                    alt="Hospelia Logo" 
-                   fill 
-                   className={`object-contain object-left transition-all duration-500 ${!useDarkStyle ? 'brightness-0 invert' : ''}`} 
-                   priority 
+                   className={`w-full h-full object-contain object-left transition-all duration-500 ${!useDarkStyle ? 'brightness-0 invert' : ''}`} 
+                   loading="eager"
+                   decoding="async"
                  /> 
                </div> 
              </Link> 

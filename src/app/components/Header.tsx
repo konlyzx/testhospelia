@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import PopupReserva from './PopupReserva';
-import Image from 'next/image';
 import { trackReservationButtonClick } from '@/utils/googleAds';
 import LanguageCurrencySelector from './LanguageCurrencySelector';
 import { usePathname } from 'next/navigation';
@@ -125,12 +124,12 @@ export default function Header() {
             {/* Logo */}
             <Link href="/" className="flex-shrink-0 flex items-center gap-2 z-50 group">
               <div className="relative h-10 w-32 transition-transform duration-300 group-hover:scale-105">
-                <Image 
+                <img 
                   src="/img/logo-hospelia.webp" 
                   alt="Hospelia Logo" 
-                  fill 
-                  className={`object-contain object-left transition-all duration-500 ${!useDarkStyle ? 'brightness-0 invert' : ''}`} 
-                  priority 
+                  className={`w-full h-full object-contain object-left transition-all duration-500 ${!useDarkStyle ? 'brightness-0 invert' : ''}`} 
+                  loading="eager"
+                  decoding="async"
                 />
               </div>
             </Link>
@@ -220,7 +219,13 @@ export default function Header() {
             {/* Header */}
             <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
                <Link href="/" onClick={() => setIsSidebarOpen(false)} className="relative h-8 w-28">
-                  <Image src="/img/logo-hospelia.webp" alt="Hospelia" fill className="object-contain object-left" />
+                  <img
+                    src="/img/logo-hospelia.webp"
+                    alt="Hospelia"
+                    className="w-full h-full object-contain object-left"
+                    loading="eager"
+                    decoding="async"
+                  />
                </Link>
                <button 
                  onClick={() => setIsSidebarOpen(false)}

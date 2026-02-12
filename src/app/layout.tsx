@@ -75,9 +75,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es" className={`${geistSans.variable} ${geistMono.variable}`}>
+    <html lang="es" className={`${geistSans.variable} ${geistMono.variable}`} suppressHydrationWarning={true}>
       <head>
-        
+
 
         <link rel="preconnect" href="https://www.googletagmanager.com" />
         <link rel="preconnect" href="https://www.google-analytics.com" />
@@ -296,12 +296,12 @@ j=d.createElement(s),dl=l!='dataLayer'?"&l="+l:'';j.async=true;j.src=
             `,
           }}
         />
-        
+
         {/* Meta Pixel Noscript */}
         <noscript>
-          <img 
-            height="1" 
-            width="1" 
+          <img
+            height="1"
+            width="1"
             style={{ display: "none" }}
             src="https://www.facebook.com/tr?id=2059684518101612&ev=PageView&noscript=1"
             alt="Facebook Pixel tracking pixel"
