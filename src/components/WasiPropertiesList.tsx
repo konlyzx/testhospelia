@@ -55,10 +55,10 @@ const useFavorites = () => {
         newFavorites.add(propertyId);
       }
       localStorage.setItem('hospelia-favorites', JSON.stringify([...newFavorites]));
-      
+
       // Disparar evento personalizado para actualizar otros componentes
       window.dispatchEvent(new CustomEvent('favoritesUpdated'));
-      
+
       return newFavorites;
     });
   };
@@ -74,12 +74,12 @@ const PropertyCard = ({ property, isFavorite, onToggleFavorite }: {
 }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
-  
+
   // Obtener todas las imágenes disponibles
   const allImages = [
     property.main_image,
-    ...(property.galleries || []).flatMap(gallery => 
-      Object.values(gallery).filter(item => 
+    ...(property.galleries || []).flatMap(gallery =>
+      Object.values(gallery).filter(item =>
         typeof item === 'object' && item !== null && 'url' in item
       )
     )
@@ -132,7 +132,7 @@ const PropertyCard = ({ property, isFavorite, onToggleFavorite }: {
   };
 
   return (
-    <div 
+    <div
       className="group cursor-pointer"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -144,18 +144,21 @@ const PropertyCard = ({ property, isFavorite, onToggleFavorite }: {
             <>
               <Link href={`/propiedad/${propertySlug}`}>
                 <Image
-                  src={allImages[currentImageIndex]?.url || allImages[currentImageIndex]?.url_big || '/placeholder-property.jpg'}
+                  src={allImages[currentImageIndex]?.url || allImages[currentImageIndex]?.url_big || '/zona-default.jpg'}
                   alt={property.title}
                   fill
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                   className="object-cover group-hover:scale-105 transition-transform duration-300"
+                  referrerPolicy="no-referrer"
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
-                    target.src = '/placeholder-property.jpg';
+                    if (!target.src.includes('/zona-default.jpg')) {
+                      target.src = '/zona-default.jpg';
+                    }
                   }}
                 />
               </Link>
-              
+
               {/* Navegación de imágenes */}
               {allImages.length > 1 && isHovered && (
                 <>
@@ -183,15 +186,14 @@ const PropertyCard = ({ property, isFavorite, onToggleFavorite }: {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
                   </button>
-                  
+
                   {/* Indicadores de imagen */}
                   <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-1">
                     {allImages.map((_, index) => (
                       <div
                         key={index}
-                        className={`w-1.5 h-1.5 rounded-full transition-all duration-200 ${
-                          index === currentImageIndex ? 'bg-white' : 'bg-white/50'
-                        }`}
+                        className={`w-1.5 h-1.5 rounded-full transition-all duration-200 ${index === currentImageIndex ? 'bg-white' : 'bg-white/50'
+                          }`}
                       />
                     ))}
                   </div>
@@ -216,11 +218,10 @@ const PropertyCard = ({ property, isFavorite, onToggleFavorite }: {
             e.stopPropagation();
             onToggleFavorite();
           }}
-          className={`absolute top-3 right-3 z-10 p-2 rounded-full transition-all duration-300 ${
-            isFavorite
+          className={`absolute top-3 right-3 z-10 p-2 rounded-full transition-all duration-300 ${isFavorite
               ? "bg-red-500 text-white shadow-lg scale-110"
               : "bg-white/90 text-gray-600 hover:bg-white hover:scale-105"
-          } backdrop-blur-sm shadow-md hover:shadow-lg`}
+            } backdrop-blur-sm shadow-md hover:shadow-lg`}
         >
           <HeartIcon
             size={18}
@@ -314,7 +315,7 @@ export default function WasiPropertiesList({ filters = {}, className = '' }: Was
 
       // Construir URL con parámetros
       const params = new URLSearchParams();
-      
+
       if (filters.search) params.append('search', filters.search);
       if (filters.for_sale !== undefined) params.append('for_sale', filters.for_sale.toString());
       if (filters.for_rent !== undefined) params.append('for_rent', filters.for_rent.toString());
@@ -328,13 +329,13 @@ export default function WasiPropertiesList({ filters = {}, className = '' }: Was
 
 
       const response = await fetch(`/api/wasi/properties?${params.toString()}`);
-      
+
       if (!response.ok) {
         throw new Error(`Error HTTP: ${response.status}`);
       }
 
       const data: ApiResponse = await response.json();
-      
+
       if (!data.success) {
         throw new Error(data.error || 'Error al obtener propiedades');
       }
@@ -345,7 +346,7 @@ export default function WasiPropertiesList({ filters = {}, className = '' }: Was
 
       setProperties(propertiesList);
       setTotal(data.total);
-      
+
     } catch (err) {
       console.error('❌ Error al obtener propiedades:', err);
       setError(err instanceof Error ? err.message : 'Error desconocido');
