@@ -9,6 +9,7 @@ import Chatbot from '@/app/components/Chatbot';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { WasiProperty } from '@/services/wasi';
 import { cleanDescription } from '@/utils/textUtils';
+import Image from 'next/image';
 import Script from 'next/script';
 import { FaCheckCircle, FaWhatsapp, FaShare, FaHeart, FaMapMarkerAlt, FaBed, FaBath, FaRulerCombined, FaCar, FaWifi, FaTv, FaUtensils, FaTshirt, FaShieldAlt, FaUserFriends, FaRegHeart, FaArrowLeft } from 'react-icons/fa';
 import PropertySafetyAndPolicy from '@/app/components/PropertySafetyAndPolicy';
@@ -210,7 +211,7 @@ export default function PropertyView({ property }: PropertyViewProps) {
 
           {/* Main Image */}
           <div className="flex-1 flex items-center justify-center p-6">
-            <div className="relative max-w-5xl max-h-full w-full bg-gray-900 rounded-lg overflow-hidden">
+            <div className="relative max-w-5xl h-full w-full bg-gray-900 rounded-lg overflow-hidden">
               <motion.div
                 key={selectedImageIndex}
                 initial={{ opacity: 0, scale: 0.9 }}
@@ -219,13 +220,20 @@ export default function PropertyView({ property }: PropertyViewProps) {
                 transition={{ duration: 0.3 }}
                 className="w-full h-full"
               >
-                <img
-                  src={allImages[selectedImageIndex]?.url || '/placeholder-property.jpg'}
+                <Image
+                  src={allImages[selectedImageIndex]?.url || '/zona-default.jpg'}
                   alt={property.title}
+                  fill
+                  sizes="100vw"
                   className="object-contain w-full h-full"
-                  loading="eager"
-                  decoding="async"
-                  onError={(event) => handleImageError(event, '/placeholder-property.jpg')}
+                  priority
+                  referrerPolicy="no-referrer"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    if (!target.src.includes('/zona-default.jpg')) {
+                      target.src = '/zona-default.jpg';
+                    }
+                  }}
                 />
               </motion.div>
             </div>
@@ -263,13 +271,19 @@ export default function PropertyView({ property }: PropertyViewProps) {
                   className={`relative w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 transition-all duration-200 ${selectedImageIndex === index ? 'ring-2 ring-white' : 'opacity-70 hover:opacity-100'
                     }`}
                 >
-                  <img
-                    src={image.url}
+                  <Image
+                    src={image.url || '/zona-default.jpg'}
                     alt={`Vista ${index + 1}`}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 33vw"
                     className="absolute inset-0 w-full h-full object-cover"
-                    loading="lazy"
-                    decoding="async"
-                    onError={(event) => handleImageError(event, '/placeholder-property.jpg')}
+                    referrerPolicy="no-referrer"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      if (!target.src.includes('/zona-default.jpg')) {
+                        target.src = '/zona-default.jpg';
+                      }
+                    }}
                   />
                 </button>
               ))}
@@ -292,7 +306,7 @@ export default function PropertyView({ property }: PropertyViewProps) {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 sm:pt-28 pb-8">
         {/* Back Button */}
-        <button 
+        <button
           onClick={() => router.back()}
           className="flex items-center gap-2 text-gray-600 hover:text-blue-600 transition-colors mb-6 group cursor-pointer"
         >
@@ -325,20 +339,20 @@ export default function PropertyView({ property }: PropertyViewProps) {
                 </span>
               </div>
             </div>
-            
+
             <div className="hidden lg:block text-right">
-               <div className="flex items-center justify-end gap-3 mb-2">
-                 <button className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 text-sm font-medium underline decoration-gray-300 underline-offset-2">
-                   <FaShare /> Compartir
-                 </button>
-                 <button 
-                   onClick={() => toggleFavorite(property.id_property)}
-                   className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 text-sm font-medium underline decoration-gray-300 underline-offset-2"
-                 >
-                   {favorites.has(property.id_property) ? <FaHeart className="text-red-500" /> : <FaRegHeart />} 
-                   {favorites.has(property.id_property) ? 'Guardado' : 'Guardar'}
-                 </button>
-               </div>
+              <div className="flex items-center justify-end gap-3 mb-2">
+                <button className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 text-sm font-medium underline decoration-gray-300 underline-offset-2">
+                  <FaShare /> Compartir
+                </button>
+                <button
+                  onClick={() => toggleFavorite(property.id_property)}
+                  className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 text-sm font-medium underline decoration-gray-300 underline-offset-2"
+                >
+                  {favorites.has(property.id_property) ? <FaHeart className="text-red-500" /> : <FaRegHeart />}
+                  {favorites.has(property.id_property) ? 'Guardado' : 'Guardar'}
+                </button>
+              </div>
             </div>
           </div>
         </motion.div>
@@ -353,17 +367,24 @@ export default function PropertyView({ property }: PropertyViewProps) {
           {allImages.length > 0 ? (
             <div className="grid grid-cols-4 grid-rows-2 gap-2 h-full">
               {/* Main Large Image */}
-              <div 
+              <div
                 className="col-span-4 sm:col-span-2 row-span-2 relative cursor-pointer group"
                 onClick={() => setShowAllPhotos(true)}
               >
-                <img
+                <Image
                   src={allImages[0]?.url || '/zona-default.jpg'}
                   alt={cleanDescription(property.title)}
+                  fill
+                  sizes="(max-width: 768px) 100vw, 50vw"
                   className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                  loading="eager"
-                  decoding="async"
-                  onError={(event) => handleImageError(event, '/zona-default.jpg')}
+                  priority
+                  referrerPolicy="no-referrer"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    if (!target.src.includes('/zona-default.jpg')) {
+                      target.src = '/zona-default.jpg';
+                    }
+                  }}
                 />
                 <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-300" />
               </div>
@@ -378,13 +399,19 @@ export default function PropertyView({ property }: PropertyViewProps) {
                     setShowAllPhotos(true);
                   }}
                 >
-                  <img
+                  <Image
                     src={image.url || '/zona-default.jpg'}
                     alt={`Vista ${index + 2}`}
+                    fill
+                    sizes="(max-width: 768px) 50vw, 25vw"
                     className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    loading="lazy"
-                    decoding="async"
-                    onError={(event) => handleImageError(event, '/zona-default.jpg')}
+                    referrerPolicy="no-referrer"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      if (!target.src.includes('/zona-default.jpg')) {
+                        target.src = '/zona-default.jpg';
+                      }
+                    }}
                   />
                   <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-300" />
                 </div>
@@ -412,7 +439,7 @@ export default function PropertyView({ property }: PropertyViewProps) {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
           {/* Left Column - Details */}
           <div className="lg:col-span-2 space-y-10">
-            
+
             {/* Header Block */}
             <div className="border-b border-gray-200 pb-8 flex justify-between items-start">
               <div>
@@ -422,7 +449,7 @@ export default function PropertyView({ property }: PropertyViewProps) {
                 <div className="text-gray-600 text-base mb-4">
                   {property.bedrooms || '1'} habitaciones • {property.bathrooms || '1'} Baños • {property.area ? `${property.area} M²` : ''}
                 </div>
-                
+
                 {/* Pills */}
                 <div className="flex flex-wrap gap-3">
                   {property.bedrooms && (
@@ -440,10 +467,10 @@ export default function PropertyView({ property }: PropertyViewProps) {
                   </div>
                 </div>
               </div>
-              
+
               <div className="text-right hidden sm:block">
-                 <div className="text-2xl font-bold text-gray-900">{getPropertyPrice()}</div>
-                 <div className="text-xs text-gray-500">ID: {property.id_property}</div>
+                <div className="text-2xl font-bold text-gray-900">{getPropertyPrice()}</div>
+                <div className="text-xs text-gray-500">ID: {property.id_property}</div>
               </div>
             </div>
 
@@ -482,30 +509,30 @@ export default function PropertyView({ property }: PropertyViewProps) {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-12">
                 {property.area && (
                   <div className="flex justify-between items-center py-1">
-                    <span className="text-gray-600 flex items-center gap-2"><FaRulerCombined className="text-gray-400"/> Área total:</span>
+                    <span className="text-gray-600 flex items-center gap-2"><FaRulerCombined className="text-gray-400" /> Área total:</span>
                     <span className="font-medium text-gray-900">{property.area} m²</span>
                   </div>
                 )}
                 {property.built_area && (
                   <div className="flex justify-between items-center py-1">
-                    <span className="text-gray-600 flex items-center gap-2"><FaRulerCombined className="text-gray-400"/> Área construida:</span>
+                    <span className="text-gray-600 flex items-center gap-2"><FaRulerCombined className="text-gray-400" /> Área construida:</span>
                     <span className="font-medium text-gray-900">{property.built_area} m²</span>
                   </div>
                 )}
                 {property.floor && (
                   <div className="flex justify-between items-center py-1">
-                    <span className="text-gray-600 flex items-center gap-2"><FaCheckCircle className="text-green-500 text-xs"/> Piso:</span>
+                    <span className="text-gray-600 flex items-center gap-2"><FaCheckCircle className="text-green-500 text-xs" /> Piso:</span>
                     <span className="font-medium text-gray-900">{property.floor}</span>
                   </div>
                 )}
                 {property.garages && property.garages !== '0' && (
                   <div className="flex justify-between items-center py-1">
-                    <span className="text-gray-600 flex items-center gap-2"><FaCar className="text-gray-400"/> Parqueadero:</span>
+                    <span className="text-gray-600 flex items-center gap-2"><FaCar className="text-gray-400" /> Parqueadero:</span>
                     <span className="font-medium text-gray-900">{property.garages}</span>
                   </div>
                 )}
                 <div className="flex justify-between items-center py-1">
-                  <span className="text-gray-600 flex items-center gap-2"><FaCheckCircle className="text-green-500 text-xs"/> Amoblado:</span>
+                  <span className="text-gray-600 flex items-center gap-2"><FaCheckCircle className="text-green-500 text-xs" /> Amoblado:</span>
                   <span className="font-medium text-gray-900">{property.furnished === 'true' ? 'Sí' : 'No'}</span>
                 </div>
               </div>
@@ -532,7 +559,7 @@ export default function PropertyView({ property }: PropertyViewProps) {
                     <li className="flex items-center gap-3 text-gray-600">
                       <FaTshirt className="text-green-500" /> Lavadora
                     </li>
-                    
+
                     {/* Dynamic Internal Features */}
                     {property.features?.internal?.slice(0, showAllFeatures ? undefined : 4).map((feature: any, idx: number) => (
                       <li key={`int-${idx}`} className="flex items-center gap-3 text-gray-600">
@@ -554,9 +581,9 @@ export default function PropertyView({ property }: PropertyViewProps) {
                   </ul>
                 </div>
               </div>
-              
+
               {((property.features?.internal?.length || 0) + (property.features?.external?.length || 0) > 10) && (
-                <button 
+                <button
                   onClick={() => setShowAllFeatures(!showAllFeatures)}
                   className="mt-6 w-full py-3 border border-gray-900 rounded-lg font-semibold text-gray-900 hover:bg-gray-50 transition-colors cursor-pointer"
                 >
@@ -616,7 +643,7 @@ export default function PropertyView({ property }: PropertyViewProps) {
                       <div className="text-[10px] font-bold uppercase text-gray-800">Huéspedes</div>
                       <div className="text-gray-900 text-sm">1 huésped</div>
                     </div>
-                    <FaUserFriends className="text-gray-400"/>
+                    <FaUserFriends className="text-gray-400" />
                   </div>
                 </div>
 
@@ -647,17 +674,17 @@ export default function PropertyView({ property }: PropertyViewProps) {
 
                 {/* Footer Actions */}
                 <div className="flex justify-between items-center border-t border-gray-100 pt-4">
-                   <button className="flex items-center gap-2 text-gray-600 text-sm hover:text-blue-600 hover:no-underline cursor-pointer">
-                     <FaShare /> Compartir
-                   </button>
-                   <button 
-                     onClick={() => toggleFavorite(property.id_property)}
-                     className="flex items-center gap-2 text-gray-600 text-sm hover:text-blue-600 hover:no-underline cursor-pointer"
-                   >
-                     {favorites.has(property.id_property) ? <FaHeart className="text-red-500" /> : <FaRegHeart />} Guardar
-                   </button>
+                  <button className="flex items-center gap-2 text-gray-600 text-sm hover:text-blue-600 hover:no-underline cursor-pointer">
+                    <FaShare /> Compartir
+                  </button>
+                  <button
+                    onClick={() => toggleFavorite(property.id_property)}
+                    className="flex items-center gap-2 text-gray-600 text-sm hover:text-blue-600 hover:no-underline cursor-pointer"
+                  >
+                    {favorites.has(property.id_property) ? <FaHeart className="text-red-500" /> : <FaRegHeart />} Guardar
+                  </button>
                 </div>
-                
+
                 <div className="mt-4 flex justify-center text-xs text-green-600 font-medium items-center gap-1 bg-green-50 py-2 rounded">
                   <FaShieldAlt /> Información verificada por Hospelia
                 </div>

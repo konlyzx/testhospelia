@@ -14,12 +14,7 @@ export default function manifest(): MetadataRoute.Manifest {
     icons: [
       {
         src: '/img/logo-hospelia.webp',
-        sizes: '192x192',
-        type: 'image/webp'
-      },
-      {
-        src: '/img/logo-hospelia.webp',
-        sizes: '512x512',
+        sizes: 'any',
         type: 'image/webp'
       }
     ]
