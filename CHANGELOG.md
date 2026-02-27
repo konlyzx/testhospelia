@@ -9,7 +9,7 @@
   - Detección automática del idioma del navegador
   - Persistencia de preferencias en localStorage
   - Traducciones completas de toda la interfaz
-  - Contexto React para manejo global de idiomas
+  - Contexto DunkUI para manejo global de idiomas
 
 #### 💱 Sistema Multidivisa Avanzado
 - **Soporte para 3 divisas principales:**
@@ -47,7 +47,7 @@
 
 ### 🔧 Mejoras Técnicas
 
-#### 📦 Nuevos Contextos React
+#### 📦 Nuevos Contextos DunkUI
 - `LanguageContext` - Manejo global de idiomas
 - `CurrencyContext` - Divisas y conversiones
 - `RecommendationContext` - IA y tracking de usuario

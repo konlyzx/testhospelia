@@ -264,7 +264,7 @@ const Chatbot: React.FC = () => {
   };
 
   const formatMessage = (text: string) => {
-    // Convertir markdown básico a JSX
+    // Convertir markdown básico para renderizado tipo Svelte
     const parts = text.split(/(\*\*.*?\*\*)/g);
     return parts.map((part, index) => {
       if (part.startsWith('**') && part.endsWith('**')) {

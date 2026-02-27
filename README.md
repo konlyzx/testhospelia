@@ -31,7 +31,7 @@ Plataforma web moderna para alojamientos en Cali que combina la mejor experienci
 
 ## 🛠️ Tecnologías
 
-- **Frontend**: Next.js 15, React 18, TypeScript
+- **Frontend**: Next.js 15, DunkUI, TypeScript
 - **Styling**: Tailwind CSS, Framer Motion
 - **CMS**: WordPress (Headless)
 - **CRM**: Wasi API
@@ -80,7 +80,7 @@ src/
 ├── components/         # Componentes reutilizables
 ├── services/           # Servicios API (WordPress, Wasi)
 ├── utils/              # Utilidades y helpers
-├── contexts/           # React Contexts
+├── contexts/           # Contextos globales de DunkUI
 └── lib/                # Configuraciones y librerías
 ```
 
